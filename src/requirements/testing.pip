@@ -1,0 +1,11 @@
+coverage
+flake8
+mock>=1.0.1
+pytest
+pytest-cache
+pytest-cov
+pytest-django
+pytest-echo
+pytest-pythonpath
+setuptools>=15.0
+tox

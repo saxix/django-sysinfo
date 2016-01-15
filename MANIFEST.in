@@ -1,0 +1,25 @@
+include AUTHORS.rst
+include CONTRIBUTING.rst
+include CHANGES.rst
+include LICENSE
+include README.rst
+include tox.ini
+
+exclude .editorconfig
+exclude .appveyor.yml
+exclude Makefile
+exclude coverage.xml
+exclude pytest.xml
+
+recursive-include src/django_sysinfo *.py
+recursive-include src/requirements *.pip
+recursive-include tests *.py
+recursive-include tests *.coveragerc
+
+;recursive-exclude tests *.pyc
+;recursive-exclude src *.pyc
+;recursive-exclude tests/__pycache__ *
+;recursive-exclude tests/**/__pycache__ *
+
+prune hooks
+prune docs
