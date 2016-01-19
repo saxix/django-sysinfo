@@ -4,16 +4,25 @@
 environment:
   matrix:
     - PYTHON: "C:\\Python27"
-      TOX_ENV: "py27"
+      TOX_ENV: "py27-d16"
 
-    - PYTHON: "C:\\Python33"
-      TOX_ENV: "py33"
+    - PYTHON: "C:\\Python27"
+      TOX_ENV: "py27-d17"
 
-    - PYTHON: "C:\\Python34"
-      TOX_ENV: "py34"
+    - PYTHON: "C:\\Python27"
+      TOX_ENV: "py27-d18"
+
+    - PYTHON: "C:\\Python27"
+      TOX_ENV: "py27-d19"
 
     - PYTHON: "C:\\Python35"
-      TOX_ENV: "py35"
+      TOX_ENV: "py27-d19"
+
+    - PYTHON: "C:\\Python35"
+      TOX_ENV: "py27-d19"
+
+    - PYTHON: "C:\\Python35"
+      TOX_ENV: "py27-d19"
 
 services:
   - mysql

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Andy (c) 2015 UN World Food Programme
+django-sysinfo (c) 2016 Stefano Apostolico
 
 Usage:
     django-sysinfo <host> ...
@@ -18,33 +18,7 @@ Options:
     --module MODULE         only print MODULE version
 
 """
-# [--server=SERVER] [--timeout=TIMEOUT]
-# [--username=USERNAME] [--password=PASSWORD]
-# [--debug]
-# andy (get|filter|sql|code|meta) <url> [FILTER ...]
-#         [--timeout=TIMEOUT] [--format=FORMAT]
-#         [--username=USERNAME] [--password=PASSWORD]
-#         [--server=SERVER]
-#         [--debug] [--raw] [-vvv]
-# andy (-h | --help)
-# andy --version
-#
-# Options:
-#     -h --help               Show this screen.
-#     --version               Show version.
-#     --timeout TIMEOUT       Timeout [default: 10]
-#     --format FORMAT         Output format [default: json]
-#     --server SERVER         Output format [default: http://api.wfp.org]
-#     -u --username USERNAME  Username
-#     -p --password PASSWORD  Password
-#     --debug                 debug
-#     --raw                   raw response
-# Examples:
-#
-#     andy get gtd/contact last_name=apostolico
-
-# """
-from __future__ import absolute_import, print_function, unicode_literals
+from __future__ import absolute_import, print_function
 
 import os
 import pprint
@@ -207,5 +181,5 @@ def main(args=None, stdout=sys.stdout):  # noqa
                 else:
                     stdout.write(pprint.pformat(res))
         except Exception as e:
-            printout('{}: ERROR ({})'.format(param, e), RED)
+            printout('Error on {}: {}'.format(param, str(e)), RED)
         stdout.write('\n')

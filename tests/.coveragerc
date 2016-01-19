@@ -1,9 +1,19 @@
 [run]
-branch = False
+branch = true
 source = django_sysinfo
-include =
+;include =
+;data_file = AAAIIIAAA
+parallel = true
 
 omit = **/django_sysinfo/__init__.py
+
+[paths]
+source =
+    src/django_sysinfo/
+    .tox/py27-d16/lib/python2.7/site-packages/django_sysinfo/
+    .tox/py27-d17/lib/python2.7/site-packages/django_sysinfo/
+    .tox/py27-d18/lib/python2.7/site-packages/django_sysinfo/
+    .tox/*/django_sysinfo
 
 [report]
 # Regexes for lines to exclude from consideration
