@@ -10,13 +10,13 @@ services:
   - PostgreSQL
 
 env:
-  - py27-d16
-  - py27-d17
-  - py27-d18
-  - py27-d19
+  - TOXENV=py27-d16
+  - TOXENV=py27-d17
+  - TOXENV=py27-d18
+  - TOXENV=py27-d19
 
-  - py35-d18
-  - py35-d19
+  - TOXENV=py35-d18
+  - TOXENV=py35-d19
 
 before_install:
   - pip install codecov
