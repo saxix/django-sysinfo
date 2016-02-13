@@ -1,9 +1,8 @@
-docopt
-pip
+#pip
 psutil
 pytz
-requests
+#requests
 six
-unicodecsv>=0.9.4
-xlrd>=0.9.2
-xlwt-future
+#unicodecsv>=0.9.4
+#xlrd>=0.9.2
+#xlwt-future

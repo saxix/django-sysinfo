@@ -28,7 +28,7 @@ def user(db):
 
 
 @pytest.mark.django_db
-def test_sysinfo(client):
+def test_sysinfo(client, cache):
     response = client.get(reverse('sys-info'))
     data = json.loads(response.content.decode('utf8'))
 
