@@ -40,9 +40,6 @@ It provides a simple api and a view that returns a json response containing:
 
 
 
-a command line utility `django-sysinfo` can be used to remotely retrieve infos.
-
-
 Documentation
 -------------
 

@@ -4,3 +4,4 @@ pdbpp
 pip
 psycopg2
 virtualenv==12.0.2 # do not upgrade. unable to create py3
+check-manifest
