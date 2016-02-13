@@ -149,10 +149,13 @@ def get_python(**kwargs):
 
 
 def get_device_info(path):
-    info = psutil.disk_usage(os.path.realpath(path))
-    return {'total': humanize_bytes(info.total),
+    try:
+        info = psutil.disk_usage(os.path.realpath(path))
+        return {'total': humanize_bytes(info.total),
             'used': humanize_bytes(info.used),
             'free': humanize_bytes(info.free)}
+    except OSError as e:
+        return {'ERROR': str(e)}
 
 
 def get_caches_info():
