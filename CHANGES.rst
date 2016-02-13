@@ -4,7 +4,7 @@
 History
 =======
 
-0.2 (2016-Jan-28)
+0.2 (2016-Feb-13)
 -----------------
 * add some infos
 * output sorted to improve readibility
