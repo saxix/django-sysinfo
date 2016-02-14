@@ -1,6 +1,6 @@
-=============================
+==============
 django-sysinfo
-=============================
+==============
 
 .. image:: https://badge.fury.io/py/django-sysinfo.png
     :target: https://badge.fury.io/py/django-sysinfo

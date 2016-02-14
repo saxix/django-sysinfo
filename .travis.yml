@@ -10,7 +10,6 @@ services:
   - PostgreSQL
 
 env:
-  - TOXENV=py27-d16
   - TOXENV=py27-d17
   - TOXENV=py27-d18
   - TOXENV=py27-d19
