@@ -4,6 +4,11 @@
 History
 =======
 
+0.3 (dev)
+---------
+* dropped support Django<1.6
+
+
 0.2 (2016-Feb-13)
 -----------------
 * add some infos
