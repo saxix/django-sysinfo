@@ -4,12 +4,15 @@
 History
 =======
 
-0.3 (dev)
----------
+0.3 (27 Mar 2016)
+-----------------
 * dropped support Django<1.6
+* add `settings.SYSINFO_USERS` to manage access
+* default Basic Authentication protected urls
+* removed 'sys' prefix from default urlpatterns
+* new 'echo' endpoint
 
-
-0.2 (2016-Feb-13)
+0.2 (13 Feb 2016)
 -----------------
 * add some infos
 * output sorted to improve readibility
@@ -18,8 +21,8 @@ History
 * removed command line utility
 
 
-0.1.1 (2016-01-20)
-------------------
+0.1.1 (20 Jan 2016)
+-------------------
 * improved coverage
 * fixes typos in copyright
 
