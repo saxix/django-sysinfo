@@ -54,7 +54,6 @@ class Encoder(DjangoJSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-# @http_basic_login
 def sysinfo(request):
     try:
         return JsonResponse(get_sysinfo(request))
