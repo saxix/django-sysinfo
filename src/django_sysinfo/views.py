@@ -2,11 +2,13 @@
 from __future__ import absolute_import, division, unicode_literals
 
 import codecs
+import json
 from functools import wraps
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 
 from .api import UNKNOWN, get_sysinfo, get_version
@@ -43,6 +45,13 @@ def http_basic_auth(func):
 
 def http_basic_login(func):
     return http_basic_auth(login_required(func))
+
+
+class Encoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if callable(obj):
+            return obj.__name__
+        return json.JSONEncoder.default(self, obj)
 
 
 # @http_basic_login

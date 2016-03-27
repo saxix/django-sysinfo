@@ -4,6 +4,11 @@
 History
 =======
 
+0.4 (dev)
+---------
+* fixes error in json serialization
+
+
 0.3 (27 Mar 2016)
 -----------------
 * dropped support Django<1.6

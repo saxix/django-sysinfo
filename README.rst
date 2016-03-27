@@ -91,3 +91,12 @@ or customize them::
         url('sys/version/(?P<name>.*)/$', version, name='sys-version')
     )
 
+
+Known issues and limits
+-----------------------
+
+There are some limitations in the metrics returned by sysinfo, anyway this package is
+not intended to be used as host/resources monitoring tool.
+
+    - Disk space returns device info, any soft limits are ignored
+    - Memory can be wrong in some virtual environments
