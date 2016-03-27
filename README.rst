@@ -54,8 +54,12 @@ It provides a simple view that returns a json response containing:
 
 
 You can add entries and/or remove what can be dangerous in your enviroment.
-The view can be protected with Basic Authentication
-without install `RemoteUserBackend`.
+The url is protected with Basic Authentication without install `RemoteUserBackend`.
+
+Allowed user to use the service can be restricted using ``settings.SYSINFO_USERS``
+ if not exist any superuser can use the endpoint::
+
+    settings.SYSINFO_USERS = ['username',]
 
 
 Quickstart

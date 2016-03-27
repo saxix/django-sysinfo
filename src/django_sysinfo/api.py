@@ -14,6 +14,7 @@ from django.conf import settings
 from django.db import connections
 
 from django_sysinfo.compat import get_istalled_apps
+from django_sysinfo.utils import get_network, humanize_bytes
 
 from .conf import config
 
@@ -59,46 +60,6 @@ def _get_database_infos(conn):
     return ret
 
 
-def humanize_bytes(bytes, raw=False, precision=1):
-    """Return a humanized string representation of a number of bytes.
-
-    Assumes `from __future__ import division`.
-
-    >>> humanize_bytes(1)
-    '1 byte'
-    >>> humanize_bytes(1024)
-    '1.0 kB'
-    >>> humanize_bytes(1024*123)
-    '123.0 kB'
-    >>> humanize_bytes(1024*12342)
-    '12.1 MB'
-    >>> humanize_bytes(1024*12342,2)
-    '12.05 MB'
-    >>> humanize_bytes(1024*1234,2)
-    '1.21 MB'
-    >>> humanize_bytes(1024*1234*1111,2)
-    '1.31 GB'
-    >>> humanize_bytes(1024*1234*1111,1)
-    '1.3 GB'
-    """
-    if raw:
-        return bytes
-    abbrevs = (
-        (1 << 50, 'PB'),
-        (1 << 40, 'TB'),
-        (1 << 30, 'GB'),
-        (1 << 20, 'MB'),
-        (1 << 10, 'kB'),
-        (1, 'bytes')
-    )
-    if bytes == 1:
-        return '1 byte'
-    for factor, suffix in abbrevs:
-        if bytes >= factor:
-            break
-    return '%.*f %s' % (precision, bytes / factor, suffix)
-
-
 def get_databases(**kwargs):
     databases = OrderedDict()
     for alias in connections:
@@ -122,12 +83,11 @@ def get_modules(**kwargs):
 
 def get_host(**kwargs):
     mem = psutil.virtual_memory()
-    nic = psutil.net_if_addrs()
     host = OrderedDict()
     host['hostname'] = socket.gethostname()
     host['fqdn'] = socket.getfqdn()
     host['cpus'] = psutil.cpu_count()
-    host['network'] = [[card, [d.address for d in data]] for card, data in nic.items()]
+    host['network'] = get_network()
 
     host['memory'] = {'total': humanize_bytes(mem.total),
                       'available': humanize_bytes(mem.available),
