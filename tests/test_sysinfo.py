@@ -25,9 +25,11 @@ def user(db):
         user.save()
     except IntegrityError:
         pass
+    return user
 
 
 @pytest.mark.django_db
+@pytest.mark.urls('urls')
 def test_sysinfo(client, cache):
     response = client.get(reverse('sys-info'))
     data = json.loads(response.content.decode('utf8'))
@@ -36,8 +38,9 @@ def test_sysinfo(client, cache):
 
 
 @pytest.mark.django_db
-def test_http_basic(rf, user, monkeypatch):
+def test_http_basic(rf, user, monkeypatch, settings):
     import base64
+    settings.SYSINFO_USERS = [user.username]
 
     monkeypatch.setattr('django.contrib.auth.login', lambda r, u: True)
     f = http_basic_auth(lambda r: 'OK')
@@ -59,6 +62,7 @@ def test_http_basic_login(client):
 
 
 @pytest.mark.django_db
+@pytest.mark.urls('urls')
 def test_version(client):
     response = client.get(reverse('sys-version', args=['pytest']))
     data = json.loads(response.content.decode('utf8'))
@@ -66,6 +70,7 @@ def test_version(client):
 
 
 @pytest.mark.django_db
+@pytest.mark.urls('urls')
 def test_version_wrong(client):
     response = client.get(reverse('sys-version', args=['@@@']))
     data = json.loads(response.content.decode('utf8'))
