@@ -10,7 +10,21 @@ django-sysinfo
 
 Simple django app to expose system infos like libraries version, database server...
 
-It provides a simple api and a view that returns a json response containing:
+Rationale
+---------
+
+In our environment we manage dozens Django's applications and sometimes we need to answer questions like:
+
+    - which application is using this broken/outdated package ?
+    - which application is using that database ?
+    ...
+
+scan all the installed sites, is tedious, we have a documentation site with
+all these infos, but we want to keep it always updated.
+Here where django-sysinfo comes to help.
+
+
+It provides a simple view that returns a json response containing:
 
 - database:
     - ip
@@ -39,11 +53,10 @@ It provides a simple api and a view that returns a json response containing:
     - NIC list and relative IP addresses
 
 
+You can add entries and/or remove what can be dangerous in your enviroment.
+The view can be protected with Basic Authentication
+without install `RemoteUserBackend`.
 
-Documentation
--------------
-
-The full documentation is at https://django-sysinfo.readthedocs.org.
 
 Quickstart
 ----------
