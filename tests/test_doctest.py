@@ -1,6 +1,6 @@
 import doctest
 import pkgutil
-from StringIO import StringIO
+from io import StringIO
 
 import pytest
 
