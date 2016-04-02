@@ -13,7 +13,7 @@ Simple django app to expose system infos like libraries version, database server
 Rationale
 ---------
 
-In our environment we manage dozens Django's applications and sometimes we need to answer questions like:
+In our environment we manage dozens of Django applications and sometimes we need to answer questions like:
 
     - which application is using this broken/outdated package ?
     - which application is using that database ?
@@ -56,8 +56,8 @@ It provides a simple view that returns a json response containing:
 You can add entries and/or remove what can be dangerous in your enviroment.
 The url is protected with Basic Authentication without install `RemoteUserBackend`.
 
-Allowed user to use the service can be restricted using ``settings.SYSINFO_USERS``
- if not exist any superuser can use the endpoint::
+Allowed user can be restricted using ``settings.SYSINFO_USERS``
+ if not exists any superuser can use the endpoint::
 
     settings.SYSINFO_USERS = ['username',]
 
