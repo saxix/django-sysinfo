@@ -92,8 +92,8 @@ or customize them::
     )
 
 
-Known issues and limits
------------------------
+Known issues and limitations
+----------------------------
 
 There are some limitations in the metrics returned by sysinfo, anyway this package is
 not intended to be used as host/resources monitoring tool.

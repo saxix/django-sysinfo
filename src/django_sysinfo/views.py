@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 import codecs
 import json
+import logging
 from functools import wraps
 
 from django.conf import settings
@@ -15,6 +16,8 @@ from .api import UNKNOWN, get_sysinfo, get_version
 from .compat import JsonResponse
 
 HTTP_HEADER_ENCODING = 'iso-8859-1'
+
+logger = logging.getLogger(__name__)
 
 
 def is_authorized(user):
@@ -49,6 +52,7 @@ def http_basic_login(func):
 
 class Encoder(DjangoJSONEncoder):
     def default(self, obj):
+        logger.info('11111111 {}'.format(str(obj)))
         if callable(obj):
             return obj.__name__
         return json.JSONEncoder.default(self, obj)
@@ -56,7 +60,7 @@ class Encoder(DjangoJSONEncoder):
 
 def sysinfo(request):
     try:
-        return JsonResponse(get_sysinfo(request))
+        return JsonResponse(get_sysinfo(request), encoder=Encoder)
     except Exception as e:
         return JsonResponse({'Error': str(e)}, status=400)
 
