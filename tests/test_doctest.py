@@ -12,11 +12,11 @@ pytestmarker = pytest.mark.trylast
 
 
 def pytest_generate_tests(metafunc):
-    if 'test' in metafunc.fixturenames:
+    if "test" in metafunc.fixturenames:
         tests = []
         ids = []
         for importer, modname, ispkg in pkgutil.walk_packages(path=package.__path__,
-                                                              prefix=package.__name__ + '.',
+                                                              prefix=package.__name__ + ".",
                                                               onerror=lambda x: None):
             try:
                 m = __import__(modname, fromlist="dummy")

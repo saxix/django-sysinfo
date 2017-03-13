@@ -7,7 +7,10 @@ History
 0.4 (dev)
 ---------
 * fixes error in json serialization
-
+* BACKWARD INCOMPATIBLE: by default all the sections are disabled
+* allow both string and callable in extra section
+* added new configuration parameters
+* new management command
 
 0.3 (27 Mar 2016)
 -----------------

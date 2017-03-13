@@ -2,4 +2,4 @@
 Sample output
 =============
 
-.. literalinclude:: output.txt
+.. literalinclude:: output.json

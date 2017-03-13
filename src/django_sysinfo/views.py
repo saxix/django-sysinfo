@@ -15,7 +15,7 @@ from django.http import HttpResponse
 from .api import UNKNOWN, get_sysinfo, get_version
 from .compat import JsonResponse
 
-HTTP_HEADER_ENCODING = 'iso-8859-1'
+HTTP_HEADER_ENCODING = "iso-8859-1"
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 def is_authorized(user):
     if user.is_superuser:
         return True
-    return user.username in getattr(settings, 'SYSINFO_USERS', [])
+    return user.username in getattr(settings, "SYSINFO_USERS", [])
 
 
 def http_basic_auth(func):
@@ -31,11 +31,11 @@ def http_basic_auth(func):
     def _decorator(request, *args, **kwargs):
         from django.contrib.auth import authenticate, login
 
-        if 'HTTP_AUTHORIZATION' in request.META:
-            authmeth, auth = request.META['HTTP_AUTHORIZATION'].split(b' ', 1)
-            if authmeth.lower() == b'basic':
-                auth = codecs.decode(auth.strip(), 'base64')
-                username, password = auth.split(b':', 1)
+        if "HTTP_AUTHORIZATION" in request.META:
+            authmeth, auth = request.META["HTTP_AUTHORIZATION"].split(b" ", 1)
+            if authmeth.lower() == b"basic":
+                auth = codecs.decode(auth.strip(), "base64")
+                username, password = auth.split(b":", 1)
                 user = authenticate(username=username, password=password)
                 if user and is_authorized(user):
                     login(request, user)
@@ -52,7 +52,6 @@ def http_basic_login(func):
 
 class Encoder(DjangoJSONEncoder):
     def default(self, obj):
-        logger.info('11111111 {}'.format(str(obj)))
         if callable(obj):
             return obj.__name__
         return json.JSONEncoder.default(self, obj)
@@ -62,7 +61,8 @@ def sysinfo(request):
     try:
         return JsonResponse(get_sysinfo(request), encoder=Encoder)
     except Exception as e:
-        return JsonResponse({'Error': str(e)}, status=400)
+        logger.exception(e)
+        return JsonResponse({"Error": str(e)}, status=400)
 
 
 def version(request, name):
