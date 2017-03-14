@@ -25,8 +25,7 @@ install:
 
 
 script:
-  - tox -e $TOXENV -- py.test tests -v --capture=no --cov=django_sysinfo \
-    --cov-config=tests/.coveragerc
+  - tox -e $TOXENV -- py.test tests -v --capture=no --cov=django_sysinfo --cov-config=tests/.coveragerc
 
 after_success:
   - codecov
