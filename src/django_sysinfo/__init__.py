@@ -6,7 +6,7 @@ import datetime
 import os
 
 NAME = "django-sysinfo"
-VERSION = __version__ = (0, 1, 0, "final", 0)
+VERSION = __version__ = (1, 0, 0, "final", 0)
 __author__ = "sax"
 
 
