@@ -17,7 +17,7 @@ In our environment we manage dozens of Django applications and sometimes we need
 
     - which application is using this broken/outdated package ?
     - which application is using that database ?
-    ...
+
 
 scan all the installed sites, is tedious, we have a documentation site with
 all these infos, but we want to keep it always updated.
@@ -100,3 +100,35 @@ not intended to be used as host/resources monitoring tool.
 
     - Disk space returns device info, any soft limits are ignored
     - Memory can be wrong in some virtual environments
+
+
+Links
+~~~~~
+
++--------------------+----------------+--------------+------------------------+
+| Stable             | |master-build| | |master-cov| |                        |
++--------------------+----------------+--------------+------------------------+
+| Development        | |dev-build|    | |dev-cov|    |                        |
++--------------------+----------------+--------------+------------------------+
+| Project home page: |https://github.com/saxix/django-sysinfo                 |
++--------------------+---------------+----------------------------------------+
+| Issue tracker:     |https://github.com/saxix/django-sysinfo/issues?sort     |
++--------------------+---------------+----------------------------------------+
+| Download:          |http://pypi.python.org/pypi/django-sysinfo/             |
++--------------------+---------------+----------------------------------------+
+| Documentation:     |https://django-sysinfo.readthedocs.org/en/latest/       |
++--------------------+---------------+--------------+-------------------------+
+
+.. |master-build| image:: https://secure.travis-ci.org/saxix/django-sysinfo.png?branch=master
+                    :target: http://travis-ci.org/saxix/django-sysinfo/
+
+.. |master-cov| image:: https://coveralls.io/repos/saxix/django-sysinfo/badge.svg?branch=master&service=github
+            :target: https://coveralls.io/github/saxix/django-sysinfo?branch=master
+
+
+.. |dev-build| image:: https://secure.travis-ci.org/saxix/django-sysinfo.png?branch=develop
+                  :target: http://travis-ci.org/saxix/django-sysinfo/
+
+.. |dev-cov| image:: https://coveralls.io/repos/saxix/django-sysinfo/badge.svg?branch=develop&service=github
+        :target: https://coveralls.io/github/saxix/django-sysinfo?branch=develop
+

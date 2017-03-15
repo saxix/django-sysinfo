@@ -160,7 +160,7 @@ CACHES
 Databases
 ---------
 
-.. code-block:: python
+.. code-block:: javascript
 
     "databases": {"default": {"engine": "django.db.backends.postgresql_psycopg2",
                                  "host": "127.0.0.1:",
@@ -179,3 +179,26 @@ Databases
 EXTRA
 -----
 
+New entries can be added using the ``extra`` entry in the configuration.
+
+in your settings
+
+.. code-block:: python
+
+
+    SYSINFO = {"extra": { "my-entry", "path.to.myfunc"}
+
+in your ``path.to`` package
+
+.. code-block:: python
+
+
+    def myfunc(request):
+        return "this is my complex function"
+
+result
+
+.. code-block:: javascript
+
+
+    "extra" : {"my-entry": "this is my complex function"}
