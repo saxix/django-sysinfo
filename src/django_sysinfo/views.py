@@ -2,23 +2,28 @@
 from __future__ import absolute_import, division, unicode_literals
 
 import codecs
+import json
+import logging
 from functools import wraps
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 
 from .api import UNKNOWN, get_sysinfo, get_version
 from .compat import JsonResponse
 
-HTTP_HEADER_ENCODING = 'iso-8859-1'
+HTTP_HEADER_ENCODING = "iso-8859-1"
+
+logger = logging.getLogger(__name__)
 
 
 def is_authorized(user):
     if user.is_superuser:
         return True
-    return user.username in getattr(settings, 'SYSINFO_USERS', [])
+    return user.username in getattr(settings, "SYSINFO_USERS", [])
 
 
 def http_basic_auth(func):
@@ -26,11 +31,11 @@ def http_basic_auth(func):
     def _decorator(request, *args, **kwargs):
         from django.contrib.auth import authenticate, login
 
-        if 'HTTP_AUTHORIZATION' in request.META:
-            authmeth, auth = request.META['HTTP_AUTHORIZATION'].split(b' ', 1)
-            if authmeth.lower() == b'basic':
-                auth = codecs.decode(auth.strip(), 'base64')
-                username, password = auth.split(b':', 1)
+        if "HTTP_AUTHORIZATION" in request.META:
+            authmeth, auth = request.META["HTTP_AUTHORIZATION"].split(b" ", 1)
+            if authmeth.lower() == b"basic":
+                auth = codecs.decode(auth.strip(), "base64")
+                username, password = auth.split(b":", 1)
                 user = authenticate(username=username, password=password)
                 if user and is_authorized(user):
                     login(request, user)
@@ -45,12 +50,19 @@ def http_basic_login(func):
     return http_basic_auth(login_required(func))
 
 
-# @http_basic_login
+class Encoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if callable(obj):
+            return obj.__name__
+        return json.JSONEncoder.default(self, obj)
+
+
 def sysinfo(request):
     try:
-        return JsonResponse(get_sysinfo(request))
+        return JsonResponse(get_sysinfo(request), encoder=Encoder)
     except Exception as e:
-        return JsonResponse({'Error': str(e)}, status=400)
+        logger.exception(e)
+        return JsonResponse({"Error": str(e)}, status=400)
 
 
 def version(request, name):

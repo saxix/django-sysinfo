@@ -1,5 +1,5 @@
 Welcome to django-sysinfo's documentation!
-=================================================================
+==========================================
 
 Contents:
 
@@ -8,6 +8,7 @@ Contents:
 
    readme
    installation
+   configure
    sample
    contributing
    authors

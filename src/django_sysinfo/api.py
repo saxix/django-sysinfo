@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, unicode_literals
 
+import logging
 import os
 import psutil
 import socket
@@ -10,15 +11,19 @@ from collections import OrderedDict
 from pkg_resources import get_distribution
 
 import pip
+import six
 from django.conf import settings
 from django.db import connections
+from django.utils.module_loading import import_string
 
 from django_sysinfo.compat import get_istalled_apps
 from django_sysinfo.utils import get_network, humanize_bytes
 
 from .conf import config
 
-UNKNOWN = 'unknown'
+logger = logging.getLogger(__name__)
+
+UNKNOWN = "unknown"
 
 
 def _run_database_statement(conn, stm):
@@ -31,32 +36,32 @@ def _run_database_statement(conn, stm):
 
 
 def _get_database_infos(conn):
-    engine = conn.settings_dict.get('ENGINE')
+    engine = conn.settings_dict.get("ENGINE")
     ret = OrderedDict()
-    if engine == 'django.db.backends.postgresql_psycopg2':
+    if engine == "django.db.backends.postgresql_psycopg2":
         import psycopg2.extensions
 
-        ret['version'] = _run_database_statement(conn, 'SHOW server_version;')
-        ret['encoding'] = _run_database_statement(conn, 'SHOW SERVER_ENCODING;')
-        ret['collate'] = _run_database_statement(conn, 'SHOW LC_COLLATE;')
-        ret['ctype'] = _run_database_statement(conn, 'SHOW LC_CTYPE;')
+        ret["version"] = _run_database_statement(conn, "SHOW server_version;")
+        ret["encoding"] = _run_database_statement(conn, "SHOW SERVER_ENCODING;")
+        ret["collate"] = _run_database_statement(conn, "SHOW LC_COLLATE;")
+        ret["ctype"] = _run_database_statement(conn, "SHOW LC_CTYPE;")
         isolation_level = conn.isolation_level
-        for attr in ['ISOLATION_LEVEL_AUTOCOMMIT',
-                     'ISOLATION_LEVEL_READ_UNCOMMITTED',
-                     'ISOLATION_LEVEL_READ_COMMITTED',
-                     'ISOLATION_LEVEL_REPEATABLE_READ',
-                     'ISOLATION_LEVEL_SERIALIZABLE']:
+        for attr in ["ISOLATION_LEVEL_AUTOCOMMIT",
+                     "ISOLATION_LEVEL_READ_UNCOMMITTED",
+                     "ISOLATION_LEVEL_READ_COMMITTED",
+                     "ISOLATION_LEVEL_REPEATABLE_READ",
+                     "ISOLATION_LEVEL_SERIALIZABLE"]:
             if conn.isolation_level == getattr(psycopg2.extensions, attr, None):
                 isolation_level = attr
 
-        ret['isolation_level'] = isolation_level
-        ret['timezone'] = conn.connection.get_parameter_status('TimeZone')
-        ret['info'] = _run_database_statement(conn, 'SELECT version();')
+        ret["isolation_level"] = isolation_level
+        ret["timezone"] = conn.connection.get_parameter_status("TimeZone")
+        ret["info"] = _run_database_statement(conn, "SELECT version();")
 
-    elif engine == 'django.db.backends.sqlite3':
-        ret['version'] = _run_database_statement(conn, 'select sqlite_version();')
-    elif engine == 'django.db.backends.oracle':
-        ret['version'] = _run_database_statement(conn, 'select * from v$version;')
+    elif engine == "django.db.backends.sqlite3":
+        ret["version"] = _run_database_statement(conn, "select sqlite_version();")
+    elif engine == "django.db.backends.oracle":
+        ret["version"] = _run_database_statement(conn, "select * from v$version;")
     return ret
 
 
@@ -65,9 +70,9 @@ def get_databases(**kwargs):
     for alias in connections:
         conn = connections[alias]
         db = OrderedDict()
-        db['engine'] = conn.settings_dict.get('ENGINE')
-        db['host'] = '%(HOST)s:%(PORT)s' % conn.settings_dict
-        db['name'] = conn.settings_dict.get('NAME')
+        db["engine"] = conn.settings_dict.get("ENGINE")
+        db["host"] = "%(HOST)s:%(PORT)s" % conn.settings_dict
+        db["name"] = conn.settings_dict.get("NAME")
         db.update(_get_database_infos(conn))
         databases[alias] = db
     return databases
@@ -84,88 +89,92 @@ def get_modules(**kwargs):
 def get_host(**kwargs):
     mem = psutil.virtual_memory()
     host = OrderedDict()
-    host['hostname'] = socket.gethostname()
-    host['fqdn'] = socket.getfqdn()
-    host['cpus'] = psutil.cpu_count()
-    host['network'] = get_network()
+    host["hostname"] = socket.gethostname()
+    host["fqdn"] = socket.getfqdn()
+    host["cpus"] = psutil.cpu_count()
+    host["network"] = get_network()
 
-    host['memory'] = {'total': humanize_bytes(mem.total),
-                      'available': humanize_bytes(mem.available),
-                      'percent': humanize_bytes(mem.percent),
-                      'used': humanize_bytes(mem.used),
-                      'free': humanize_bytes(mem.free)}
+    host["memory"] = {"total": humanize_bytes(mem.total),
+                      "available": humanize_bytes(mem.available),
+                      "percent": humanize_bytes(mem.percent),
+                      "used": humanize_bytes(mem.used),
+                      "free": humanize_bytes(mem.free)}
     return host
 
 
 def get_python(**kwargs):
     p = OrderedDict()
-    p['executable'] = sys.executable
-    p['version'] = "{0.major}.{0.minor}.{0.micro}".format(sys.version_info)
-    p['platform'] = sys.platform
-    p['info'] = sys.version
-    p['maxunicode'] = (sys.maxunicode,
-                       {True: 'OK', False: 'WARN'}[sys.maxunicode > 0xffff])
+    p["executable"] = sys.executable
+    p["version"] = "{0.major}.{0.minor}.{0.micro}".format(sys.version_info)
+    p["platform"] = sys.platform
+    p["info"] = sys.version
+    p["maxunicode"] = (sys.maxunicode,
+                       {True: "OK", False: "WARN"}[sys.maxunicode > 0xffff])
     return p
 
 
 def get_device_info(path):
     try:
         info = psutil.disk_usage(os.path.realpath(path))
-        return {'total': humanize_bytes(info.total),
-            'used': humanize_bytes(info.used),
-            'free': humanize_bytes(info.free)}
+        return {"total": humanize_bytes(info.total),
+                "used": humanize_bytes(info.used),
+                "free": humanize_bytes(info.free)}
     except OSError as e:
-        return {'ERROR': str(e)}
+        return {"ERROR": str(e)}
 
 
 def get_caches_info():
     ret = dict(settings.CACHES)
     for k, v in ret.items():
-        backend = settings.CACHES[k]['BACKEND']
-        loc = settings.CACHES[k].get('LOCATION', None)
-        if backend == 'django.core.cache.backends.filebased.FileBasedCache':
-            ret[k]['status'] = get_device_info(loc)
+        backend = settings.CACHES[k]["BACKEND"]
+        loc = settings.CACHES[k].get("LOCATION", None)
+        if backend == "django.core.cache.backends.filebased.FileBasedCache":
+            ret[k]["status"] = get_device_info(loc)
     return ret
 
 
 def get_project(**kwargs):
     project = OrderedDict()
-    project['current_dir'] = os.path.realpath(os.curdir)
-    project['tempdir'] = tempfile.gettempdir()
-    project['MEDIA_ROOT'] = OrderedDict([('path', settings.MEDIA_ROOT),
-                                         ('disk', get_device_info(settings.MEDIA_ROOT))])
+    project["current_dir"] = os.path.realpath(os.curdir)
+    project["tempdir"] = tempfile.gettempdir()
 
-    project['STATIC_ROOT'] = OrderedDict([('path', settings.STATIC_ROOT),
-                                          ('disk', get_device_info(settings.STATIC_ROOT))])
+    if config.MEDIA_ROOT:
+        project["MEDIA_ROOT"] = OrderedDict([("path", settings.MEDIA_ROOT),
+                                             ("disk", get_device_info(settings.MEDIA_ROOT))])
 
-    project['CACHES'] = get_caches_info()
+    if config.STATIC_ROOT:
+        project["STATIC_ROOT"] = OrderedDict([("path", settings.STATIC_ROOT),
+                                              ("disk", get_device_info(settings.STATIC_ROOT))])
+
+    if config.CACHES:
+        project["CACHES"] = get_caches_info()
 
     if config.installed_apps:
-        project['installed_apps'] = get_istalled_apps()
+        project["installed_apps"] = get_istalled_apps()
     return project
 
 
 def get_os(**kwargs):
-    return {'uname': os.uname(),
-            'name': os.name}
+    return {"uname": os.uname(),
+            "name": os.name}
 
 
-handlers = OrderedDict([('host', get_host),
-                        ('os', get_os),
-                        ('python', get_python),
-                        ('modules', get_modules),
-                        ('project', get_project),
-                        ('databases', get_databases)])
+handlers = OrderedDict([("host", get_host),
+                        ("os", get_os),
+                        ("python", get_python),
+                        ("modules", get_modules),
+                        ("project", get_project),
+                        ("databases", get_databases)])
 valid_sections = handlers.keys()
 
 
 def get_sysinfo(request):
     data = OrderedDict()
-    sections = request.GET.get('s', None)
+    sections = request.GET.get("s", None)
     if sections is None:
         sections = valid_sections
     else:
-        sections = sections.split(',')
+        sections = sections.split(",")
 
     for section in sections:
         if section in valid_sections and getattr(config, section):
@@ -174,8 +183,20 @@ def get_sysinfo(request):
     if config.extra:
         extras = {}
         for k, v in config.extra.items():
-            extras[k] = v(request)
-        data['extras'] = extras
+            try:
+                if isinstance(v, six.string_types):
+                    c = import_string(v)
+                    extras[k] = c(request)
+                elif callable(v):
+                    extras[k] = v(request)
+                else:
+                    extras[k] = v
+            except Exception as e:
+                logger.exception(e)
+                if settings.DEBUG:
+                    extras[k] = str(e)
+
+        data["extra"] = extras
 
     return data
 

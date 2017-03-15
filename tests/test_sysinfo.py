@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function, unicode_literals
+from __future__ import absolute_import, print_function
 
 import json
 import logging
@@ -20,8 +20,8 @@ def user(db):
     from django.db import IntegrityError
 
     try:
-        user = User(username='sax', email='')
-        user.set_password('123')
+        user = User(username="sax", email="")
+        user.set_password("123")
         user.save()
     except IntegrityError:
         pass
@@ -29,12 +29,12 @@ def user(db):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls('urls')
+@pytest.mark.urls("urls")
 def test_sysinfo(client, cache):
-    response = client.get(reverse('sys-info'))
-    data = json.loads(response.content.decode('utf8'))
+    response = client.get(reverse("sys-info"))
+    data = json.loads(response.content.decode("utf8"))
 
-    assert data['modules']['pytest'] == pytest.__version__
+    assert data["modules"]["pytest"] == pytest.__version__
 
 
 @pytest.mark.django_db
@@ -42,37 +42,76 @@ def test_http_basic(rf, user, monkeypatch, settings):
     import base64
     settings.SYSINFO_USERS = [user.username]
 
-    monkeypatch.setattr('django.contrib.auth.login', lambda r, u: True)
-    f = http_basic_auth(lambda r: 'OK')
+    monkeypatch.setattr("django.contrib.auth.login", lambda r, u: True)
+    f = http_basic_auth(lambda r: "OK")
 
-    auth_headers = {'HTTP_AUTHORIZATION': b'Basic ' + base64.b64encode('username:password'.encode())}
-    r = rf.get('/', **auth_headers)
+    auth_headers = {"HTTP_AUTHORIZATION": b"Basic " + base64.b64encode("username:password".encode())}
+    r = rf.get("/", **auth_headers)
     with pytest.raises(PermissionDenied):
         f(r)
 
-    auth_headers = {'HTTP_AUTHORIZATION': b'Basic ' + base64.b64encode('sax:123'.encode())}
-    r = rf.get('/', **auth_headers)
-    assert f(r) == 'OK'
+    auth_headers = {"HTTP_AUTHORIZATION": b"Basic " + base64.b64encode("sax:123".encode())}
+    r = rf.get("/", **auth_headers)
+    assert f(r) == "OK"
 
 
 @pytest.mark.django_db
 def test_http_basic_login(client):
-    response = client.get(reverse('sys-info-auth'))
+    response = client.get(reverse("sys-info-auth"))
     assert response.status_code == 302
 
 
 @pytest.mark.django_db
-@pytest.mark.urls('urls')
+@pytest.mark.urls("urls")
 def test_version(client):
-    response = client.get(reverse('sys-version', args=['pytest']))
-    data = json.loads(response.content.decode('utf8'))
-    assert data['pytest'] == pytest.__version__
+    response = client.get(reverse("sys-version", args=["pytest"]))
+    data = json.loads(response.content.decode("utf8"))
+    assert data["pytest"] == pytest.__version__
 
 
 @pytest.mark.django_db
-@pytest.mark.urls('urls')
+@pytest.mark.urls("urls")
 def test_version_wrong(client):
-    response = client.get(reverse('sys-version', args=['@@@']))
-    data = json.loads(response.content.decode('utf8'))
-    assert data['@@@'] == UNKNOWN
+    response = client.get(reverse("sys-version", args=["@@@"]))
+    data = json.loads(response.content.decode("utf8"))
+    assert data["@@@"] == UNKNOWN
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+@pytest.mark.urls("urls")
+def test_config(client, monkeypatch):
+    monkeypatch.setattr("django_sysinfo.conf.config.host", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.os", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.python", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.modules", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.project", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.databases", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.extra", False)
+
+    response = client.get(reverse("sys-info"))
+    data = json.loads(response.content.decode("utf8"))
+    assert data == {}
+
+
+@pytest.mark.django_db
+@pytest.mark.urls("urls")
+def test_extra(client, monkeypatch):
+    from demoproject.models import test_sysinfo
+
+    monkeypatch.setattr("django_sysinfo.conf.config.host", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.os", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.python", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.modules", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.project", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.databases", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.installed_apps", False)
+    monkeypatch.setattr("django_sysinfo.api.config.extra", {"test1": "demoproject.models.test_sysinfo",
+                                                            "test2": test_sysinfo,
+                                                            })
+
+    response = client.get(reverse("sys-info"))
+    data = json.loads(response.content.decode("utf8"))
+    assert list(data.keys()) == ["extra"], data.keys()
+    assert data["extra"]["test1"] == 123
+    assert data["extra"]["test2"] == 123

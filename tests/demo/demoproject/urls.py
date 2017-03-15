@@ -11,17 +11,18 @@ import django_sysinfo.urls
 from django_sysinfo.views import http_basic_login, sysinfo
 
 urlpatterns = (
-    url('sys/info-auth/$', http_basic_login(sysinfo), name='sys-info-auth'),
-    url(r'', include(django_sysinfo.urls)),
-    url(r'admin/', include(admin.site.urls)),
+    url("sys/info-auth/$", http_basic_login(sysinfo), name="sys-info-auth"),
+    url(r"", include(django_sysinfo.urls)),
+    url(r"admin/", include(admin.site.urls)),
 )
 
 
 @receiver(request_started)
 def c(*args, **kwargs):
     try:
-        user = User(username='sax', email='')
-        user.set_password('123')
+        user = User(username="sax", email="")
+        user.set_password("123")
+        user.set_password("123")
         user.save()
     except IntegrityError:
         pass

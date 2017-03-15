@@ -4,6 +4,14 @@
 History
 =======
 
+1.0 (15 Mar 2017)
+-----------------
+* fixes error in json serialization
+* BACKWARD INCOMPATIBLE: by default all the sections are disabled
+* allow both string and callable in extra section
+* added new configuration parameters
+* new management command
+
 0.3 (27 Mar 2016)
 -----------------
 * dropped support Django<1.6
@@ -27,6 +35,6 @@ History
 * fixes typos in copyright
 
 
-0.1.0 (2016-01-15)
-------------------
+0.1.0 (15 Jan 2015)
+-------------------
 * First release on PyPI.
