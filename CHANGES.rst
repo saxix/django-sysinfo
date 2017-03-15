@@ -4,8 +4,8 @@
 History
 =======
 
-0.4 (dev)
----------
+1.0 (15 Mar 2017)
+-----------------
 * fixes error in json serialization
 * BACKWARD INCOMPATIBLE: by default all the sections are disabled
 * allow both string and callable in extra section
