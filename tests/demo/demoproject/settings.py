@@ -20,7 +20,6 @@ DATABASES = {
     "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": ":memory:"},
-
 }
 
 TIME_ZONE = "Europe/Rome"

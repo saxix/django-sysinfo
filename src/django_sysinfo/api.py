@@ -68,13 +68,17 @@ def _get_database_infos(conn):
 def get_databases(**kwargs):
     databases = OrderedDict()
     for alias in connections:
-        conn = connections[alias]
         db = OrderedDict()
-        db["engine"] = conn.settings_dict.get("ENGINE")
-        db["host"] = "%(HOST)s:%(PORT)s" % conn.settings_dict
-        db["name"] = conn.settings_dict.get("NAME")
-        db.update(_get_database_infos(conn))
-        databases[alias] = db
+        try:
+            conn = connections[alias]
+            db["engine"] = conn.settings_dict.get("ENGINE")
+            db["host"] = "%(HOST)s:%(PORT)s" % conn.settings_dict
+            db["name"] = conn.settings_dict.get("NAME")
+            db.update(_get_database_infos(conn))
+        except Exception as e:
+            db["error"] = str(e)
+        finally:
+            databases[alias] = db
     return databases
 
 
