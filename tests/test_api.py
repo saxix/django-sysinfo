@@ -1,14 +1,31 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
+from collections import OrderedDict
 
 import pytest
 from django.db import connections
 
-from django_sysinfo.api import get_databases
+from django_sysinfo.api import get_databases, get_mail
 
 logger = logging.getLogger(__name__)
+
+
+@pytest.mark.django_db
+def test_mail():
+    ret = get_mail()
+    assert ret == OrderedDict([("backend", "django.core.mail.backends.locmem.EmailBackend"),
+                               ("host", "localhost:25"),
+                               ("tls", False), ("ssl", False),
+                               ("status", "OK")]), ret
+
+
+@pytest.mark.django_db
+def test_mail_broken(settings):
+    settings.EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    ret = get_mail()
+    assert ret["status"] == "[Errno 61] Connection refused"
 
 
 @pytest.mark.django_db

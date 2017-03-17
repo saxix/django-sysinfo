@@ -10,6 +10,7 @@ class Config(object):
         self.databases = SYSINFO.get("databases", False)
         self.modules = SYSINFO.get("modules", False)
         # self.installed_apps = SYSINFO.get("installed_apps", False)
+        self.mail = SYSINFO.get("mail", False)
         self.host = SYSINFO.get("host", False)
         self.project = SYSINFO.get("project", False)
         self.installed_apps = SYSINFO.get("project.installed_apps", False)
@@ -23,6 +24,7 @@ class Config(object):
     def __repr__(self):
         return str({"host": self.host,
                     "os": self.os,
+                    "mail": self.mail,
                     "python": self.python,
                     "modules": self.modules,
                     "project": self.project,

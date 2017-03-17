@@ -16,6 +16,7 @@ Configure
            "project.MEDIA_ROOT": True,
            "project.STATIC_ROOT": True,
            "project.CACHES": True,
+           "project.mail": True,
            "extra": None
            }
 
@@ -158,7 +159,7 @@ CACHES
 
 
 Databases
----------
+~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -174,6 +175,19 @@ Databases
                                 "server": "3.8.10.2",
                                 "timezone": "UTC",
                                 "version": "3.8.10.2"}},
+
+
+Mail
+~~~~
+
+.. code-block:: javascript
+
+    "mail" : {"backend": "django.core.mail.backends.locmem.EmailBackend",
+              "host", "localhost:25",
+              "tls", "false",
+              "ssl": "false",
+              "status": "OK"}
+
 
 
 EXTRA

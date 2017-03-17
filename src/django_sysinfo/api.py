@@ -117,6 +117,27 @@ def get_python(**kwargs):
     return p
 
 
+def get_mail():
+    def check():
+        from django.core.mail import get_connection
+        try:
+            conn = get_connection(fail_silently=False)
+            conn.open()
+            ret = "OK"
+            conn.close()
+        except Exception as e:
+            ret = str(e)
+        return ret
+
+    p = OrderedDict()
+    p["backend"] = settings.EMAIL_BACKEND
+    p["host"] = "{0}:{1}".format(settings.EMAIL_HOST, settings.EMAIL_PORT)
+    p["tls"] = getattr(settings, "USE_TLS", False)
+    p["ssl"] = getattr(settings, "USE_SSL", False)
+    p["status"] = check()
+    return p
+
+
 def get_device_info(path):
     try:
         info = psutil.disk_usage(os.path.realpath(path))
@@ -168,6 +189,7 @@ handlers = OrderedDict([("host", get_host),
                         ("python", get_python),
                         ("modules", get_modules),
                         ("project", get_project),
+                        ("mail", get_mail),
                         ("databases", get_databases)])
 valid_sections = handlers.keys()
 
