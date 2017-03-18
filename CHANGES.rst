@@ -4,6 +4,13 @@
 History
 =======
 
+1.1 dev
+-------
+* handle broken database connections
+* add new mail server informations
+* new 'checks' API
+* BACKWARD INCONPATIBLE: new config format
+
 1.0 (15 Mar 2017)
 -----------------
 * fixes error in json serialization

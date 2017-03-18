@@ -2,18 +2,15 @@
 from __future__ import absolute_import, division, unicode_literals
 
 import codecs
-import json
 import logging
 from functools import wraps
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
-from .api import UNKNOWN, get_sysinfo, get_version
-from .compat import JsonResponse
+from .api import UNKNOWN, get_sysinfo, get_version, run_check
 
 HTTP_HEADER_ENCODING = "iso-8859-1"
 
@@ -50,17 +47,17 @@ def http_basic_login(func):
     return http_basic_auth(login_required(func))
 
 
-class Encoder(DjangoJSONEncoder):
-    def default(self, obj):
-        if callable(obj):
-            return obj.__name__
-        return json.JSONEncoder.default(self, obj)
+# class Encoder(DjangoJSONEncoder):
+#     def default(self, obj):
+#         if callable(obj):
+#             return obj.__name__
+#         return json.JSONEncoder.default(self, obj)
 
 
 def sysinfo(request):
     try:
-        return JsonResponse(get_sysinfo(request), encoder=Encoder)
-    except Exception as e:
+        return JsonResponse(get_sysinfo(request))
+    except Exception as e:  # pragma: no cover
         logger.exception(e)
         return JsonResponse({"Error": str(e)}, status=400)
 
@@ -77,3 +74,11 @@ def version(request, name):
 
 def echo(request, value):
     return HttpResponse(value)
+
+
+def check(request, id):
+    try:
+        ret, status = run_check(id)
+        return JsonResponse({"message": ret}, status=status)
+    except Exception as e:  # pragma: no cover
+        return JsonResponse({"error": str(e)}, status=500)

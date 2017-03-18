@@ -117,7 +117,7 @@ def get_python(**kwargs):
     return p
 
 
-def get_mail():
+def get_mail(**kwargs):
     def check():
         from django.core.mail import get_connection
         try:
@@ -176,6 +176,8 @@ def get_project(**kwargs):
 
     if config.installed_apps:
         project["installed_apps"] = get_istalled_apps()
+    if config.mail:
+        project["mail"] = get_mail(**kwargs)
     return project
 
 
@@ -184,13 +186,65 @@ def get_os(**kwargs):
             "name": os.name}
 
 
+def run_check(id, request=None, fail_silently=True, fail_status=500):
+    status = 200
+    try:
+        v = config.checks[id]
+        if isinstance(v, six.string_types):
+            c = import_string(v)
+            ret, status = c(request)
+        elif callable(v):
+            ret, status = v(request)
+        else:
+            ret = v
+    except Exception as e:
+        ret = "ERROR"
+        status = fail_status
+        logger.exception(e)
+        if settings.DEBUG:
+            ret = str(e)
+        if not fail_silently:
+            raise
+
+    return ret, status
+
+
+def get_checks(request=None):
+    checks = {}
+    if config.checks:
+        for k, v in config.checks.items():
+            checks[k] = run_check(k)
+
+    return checks
+
+
+def get_extra(config, request=None):
+    extras = {}
+    for k, v in config.extra.items():
+        try:
+            if isinstance(v, six.string_types):
+                c = import_string(v)
+                extras[k] = c(request)
+            elif callable(v):
+                extras[k] = v(request)
+            else:
+                extras[k] = v
+        except Exception as e:
+            logger.exception(e)
+            if settings.DEBUG:
+                extras[k] = str(e)
+    return extras
+
+
 handlers = OrderedDict([("host", get_host),
                         ("os", get_os),
                         ("python", get_python),
                         ("modules", get_modules),
                         ("project", get_project),
-                        ("mail", get_mail),
-                        ("databases", get_databases)])
+                        # ("databases", get_databases),
+                        ("extra", get_extra),
+                        ("checks", get_checks)])
+
 valid_sections = handlers.keys()
 
 
@@ -204,25 +258,7 @@ def get_sysinfo(request):
 
     for section in sections:
         if section in valid_sections and getattr(config, section):
-            data[section] = handlers[section](config=config)
-
-    if config.extra:
-        extras = {}
-        for k, v in config.extra.items():
-            try:
-                if isinstance(v, six.string_types):
-                    c = import_string(v)
-                    extras[k] = c(request)
-                elif callable(v):
-                    extras[k] = v(request)
-                else:
-                    extras[k] = v
-            except Exception as e:
-                logger.exception(e)
-                if settings.DEBUG:
-                    extras[k] = str(e)
-
-        data["extra"] = extras
+            data[section] = handlers[section](config=config, request=request)
 
     return data
 

@@ -1,7 +1,7 @@
 coverage
 flake8
 mock>=1.0.1
-pytest
+pytest>=3.0.7
 pytest-cache
 pytest-cov
 pytest-django

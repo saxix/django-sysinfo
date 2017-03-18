@@ -5,20 +5,24 @@ Configuration
 Configure
 =========
 
+It possible to include/exclude each session, custom callable and add checks
+available thru the `check` url
+
 .. code-block:: javascript
 
-    SYSINFO = {"host": True,
-           "os": True,
-           "python": True,
-           "modules": True,
-           "project": True,
-           "project.installed_apps": True,
-           "project.MEDIA_ROOT": True,
-           "project.STATIC_ROOT": True,
-           "project.CACHES": True,
-           "project.mail": True,
-           "extra": None
-           }
+    SYSINFO = {"os": False,
+            "modules": False,
+            "python": False,
+            "host": False,
+            "extra": False,
+            "checks": {},
+            "project": {
+                "mail": False,
+                "databases": False,
+                "MEDIA_ROOT": False,
+                "STATIC_ROOT": False,
+                "CACHES": False}
+            }
 
 Sections
 ========

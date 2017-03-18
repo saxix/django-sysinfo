@@ -1,4 +1,5 @@
-from __future__ import absolute_import
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
@@ -121,12 +122,15 @@ SYSINFO = {"host": True,
            "os": True,
            "python": True,
            "modules": True,
-           "project": True,
-           "project.installed_apps": True,
-           "project.MEDIA_ROOT": True,
-           "project.STATIC_ROOT": True,
-           "project.CACHES": True,
-           "databases": True,
+           "project": {
+               "mail": True,
+               "installed_apps": True,
+               "databases": True,
+               "MEDIA_ROOT": True,
+               "STATIC_ROOT": True,
+               "CACHES": True
+           },
+           "checks": None,
            "extra": None
            }
 

@@ -13,6 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 @pytest.mark.django_db
+def test_database():
+    ret = get_databases()
+    assert ret
+
+
+@pytest.mark.django_db
 def test_mail():
     ret = get_mail()
     assert ret == OrderedDict([("backend", "django.core.mail.backends.locmem.EmailBackend"),
