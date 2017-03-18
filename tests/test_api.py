@@ -31,7 +31,8 @@ def test_mail():
 def test_mail_broken(settings):
     settings.EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     ret = get_mail()
-    assert ret["status"] == "[Errno 61] Connection refused", ret
+    assert ret["status"] in ("[Errno 61] Connection refused",
+                             "[Errno 111] Connection refused"), ret
 
 
 @pytest.mark.django_db
