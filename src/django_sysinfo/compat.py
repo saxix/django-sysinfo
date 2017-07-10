@@ -9,10 +9,10 @@ import django
 
 logger = logging.getLogger(__name__)
 
-if django.VERSION[1] in [7, 8, 9, 10]:
+if django.VERSION[1] in [7, 8, 9, 10, 11]:
     from django.apps import apps
 
-    def get_istalled_apps():
+    def get_installed_apps():
         installed_apps = []
         for app_config in apps.get_app_configs():
             try:

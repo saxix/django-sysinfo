@@ -9,3 +9,4 @@ dist/
 .coverage
 /manage.py
 /.coverage.jeeg-*
+.idea/

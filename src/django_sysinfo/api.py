@@ -16,7 +16,7 @@ from django.conf import settings
 from django.db import connections
 from django.utils.module_loading import import_string
 
-from django_sysinfo.compat import get_istalled_apps
+from django_sysinfo.compat import get_installed_apps
 from django_sysinfo.utils import get_network, humanize_bytes
 
 from .conf import config
@@ -175,7 +175,7 @@ def get_project(**kwargs):
         project["CACHES"] = get_caches_info()
 
     if config.installed_apps:
-        project["installed_apps"] = get_istalled_apps()
+        project["installed_apps"] = get_installed_apps()
     if config.mail:
         project["mail"] = get_mail(**kwargs)
     return project

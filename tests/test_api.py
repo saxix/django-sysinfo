@@ -48,7 +48,8 @@ def test_broken_database(settings, monkeypatch):
             "HOST": "127.0.0.1",
             "PORT": "21",
             "USER": "",
-            "PASSWORD": ""},
+            "PASSWORD": ""
+        },
 
     }
     monkeypatch.setattr(connections, "_databases", None)
