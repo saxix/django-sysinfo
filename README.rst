@@ -125,13 +125,13 @@ Links
 .. |master-build| image:: https://secure.travis-ci.org/saxix/django-sysinfo.png?branch=master
                     :target: http://travis-ci.org/saxix/django-sysinfo/
 
-.. |master-cov| image:: https://coveralls.io/repos/saxix/django-sysinfo/badge.svg?branch=master&service=github
-            :target: https://coveralls.io/github/saxix/django-sysinfo?branch=master
+.. |master-cov| image:: https://codecov.io/github/saxix/django-sysinfo/coverage.svg?branch=master
+            :target: https://codecov.io/github/saxix/django-sysinfo?branch=master
 
 
 .. |dev-build| image:: https://secure.travis-ci.org/saxix/django-sysinfo.png?branch=develop
                   :target: http://travis-ci.org/saxix/django-sysinfo/
 
-.. |dev-cov| image:: https://coveralls.io/repos/saxix/django-sysinfo/badge.svg?branch=develop&service=github
-        :target: https://coveralls.io/github/saxix/django-sysinfo?branch=develop
+.. |dev-cov| image:: https://codecov.io/github/saxix/django-sysinfo/coverage.svg?branch=develop
+        :target: https://codecov.io/github/saxix/django-sysinfo?branch=develop
 
