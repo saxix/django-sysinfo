@@ -5,19 +5,24 @@ Configuration
 Configure
 =========
 
+It possible to include/exclude each session, custom callable and add checks
+available thru the `check` url
+
 .. code-block:: javascript
 
-    SYSINFO = {"host": True,
-           "os": True,
-           "python": True,
-           "modules": True,
-           "project": True,
-           "project.installed_apps": True,
-           "project.MEDIA_ROOT": True,
-           "project.STATIC_ROOT": True,
-           "project.CACHES": True,
-           "extra": None
-           }
+    SYSINFO = {"os": False,
+            "modules": False,
+            "python": False,
+            "host": False,
+            "extra": False,
+            "checks": {},
+            "project": {
+                "mail": False,
+                "databases": False,
+                "MEDIA_ROOT": False,
+                "STATIC_ROOT": False,
+                "CACHES": False}
+            }
 
 Sections
 ========
@@ -158,7 +163,7 @@ CACHES
 
 
 Databases
----------
+~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -174,6 +179,19 @@ Databases
                                 "server": "3.8.10.2",
                                 "timezone": "UTC",
                                 "version": "3.8.10.2"}},
+
+
+Mail
+~~~~
+
+.. code-block:: javascript
+
+    "mail" : {"backend": "django.core.mail.backends.locmem.EmailBackend",
+              "host", "localhost:25",
+              "tls", "false",
+              "ssl": "false",
+              "status": "OK"}
+
 
 
 EXTRA

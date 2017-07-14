@@ -1,5 +1,5 @@
 django
-ipython
+ipython<6.0
 pdbpp
 pip
 psycopg2

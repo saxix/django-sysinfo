@@ -4,6 +4,14 @@
 History
 =======
 
+1.1 14 Jul 2017
+---------------
+* Django 1.11 compatibility
+* handle broken database connections
+* add new mail server informations
+* new 'checks' API
+* BACKWARD INCONPATIBLE: new config format
+
 1.0 (15 Mar 2017)
 -----------------
 * fixes error in json serialization

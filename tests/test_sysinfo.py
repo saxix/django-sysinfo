@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import json
 import logging
@@ -35,6 +35,22 @@ def test_sysinfo(client, cache):
     data = json.loads(response.content.decode("utf8"))
 
     assert data["modules"]["pytest"] == pytest.__version__
+
+
+@pytest.mark.django_db
+@pytest.mark.urls("urls")
+def test_echo(client, cache):
+    response = client.get(reverse("sys-echo", args=["abc"]))
+    assert response.content.decode("utf8") == "abc"
+
+
+@pytest.mark.django_db
+@pytest.mark.urls("urls")
+def test_sysinfo_limit_Sections(client, cache):
+    response = client.get("%s?s=os,host" % reverse("sys-info"))
+    data = json.loads(response.content.decode("utf8"))
+
+    assert sorted(data.keys()) == ["host", "os"]
 
 
 @pytest.mark.django_db
@@ -88,30 +104,8 @@ def test_config(client, monkeypatch):
     monkeypatch.setattr("django_sysinfo.conf.config.project", False)
     monkeypatch.setattr("django_sysinfo.conf.config.databases", False)
     monkeypatch.setattr("django_sysinfo.conf.config.extra", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.checks", False)
 
     response = client.get(reverse("sys-info"))
     data = json.loads(response.content.decode("utf8"))
-    assert data == {}
-
-
-@pytest.mark.django_db
-@pytest.mark.urls("urls")
-def test_extra(client, monkeypatch):
-    from demoproject.models import test_sysinfo
-
-    monkeypatch.setattr("django_sysinfo.conf.config.host", False)
-    monkeypatch.setattr("django_sysinfo.conf.config.os", False)
-    monkeypatch.setattr("django_sysinfo.conf.config.python", False)
-    monkeypatch.setattr("django_sysinfo.conf.config.modules", False)
-    monkeypatch.setattr("django_sysinfo.conf.config.project", False)
-    monkeypatch.setattr("django_sysinfo.conf.config.databases", False)
-    monkeypatch.setattr("django_sysinfo.conf.config.installed_apps", False)
-    monkeypatch.setattr("django_sysinfo.api.config.extra", {"test1": "demoproject.models.test_sysinfo",
-                                                            "test2": test_sysinfo,
-                                                            })
-
-    response = client.get(reverse("sys-info"))
-    data = json.loads(response.content.decode("utf8"))
-    assert list(data.keys()) == ["extra"], data.keys()
-    assert data["extra"]["test1"] == 123
-    assert data["extra"]["test2"] == 123
+    assert data == {}, data

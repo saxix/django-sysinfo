@@ -26,11 +26,6 @@ Here where django-sysinfo comes to help.
 
 It provides a simple view that returns a json response containing:
 
-- database:
-    - ip
-    - engine
-    - version
-
 - environment:
     - installed modules and version
 
@@ -39,6 +34,11 @@ It provides a simple view that returns a json response containing:
     - django installed apps
     - process path
     - temp dir path
+    - databases:
+        - ip
+        - engine
+        - version
+    - mail server
 
 - os:
     - name
@@ -51,6 +51,9 @@ It provides a simple view that returns a json response containing:
     - cpu(s) number
     - free/total memory
     - NIC list and relative IP addresses
+
+- extra:
+    <user defined functions>
 
 
 You can add entries and/or remove what can be dangerous in your enviroment.

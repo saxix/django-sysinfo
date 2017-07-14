@@ -13,9 +13,13 @@ env:
   - TOXENV=py27-d17
   - TOXENV=py27-d18
   - TOXENV=py27-d19
+  - TOXENV=py27-d110
+  - TOXENV=py27-d111
 
   - TOXENV=py35-d18
   - TOXENV=py35-d19
+  - TOXENV=py35-d110
+  - TOXENV=py35-d111
 
 before_install:
   - pip install codecov
@@ -25,8 +29,11 @@ install:
 
 
 script:
-  - tox -e $TOXENV -- py.test tests -v --capture=no --cov=django_sysinfo --cov-config=tests/.coveragerc
+  - tox -e $TOXENV -- py.test tests -v --capture=no --cov=django_sysinfo --cov-report=xml --cov-config=tests/.coveragerc
+
+before_success:
+  - coverage erase
 
 after_success:
-  - codecov
+  - coverage combine
   - coveralls

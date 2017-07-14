@@ -7,4 +7,6 @@ __pycache__
 *.xml
 dist/
 .coverage
-
+/manage.py
+/.coverage.jeeg-*
+.idea/

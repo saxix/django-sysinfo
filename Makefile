@@ -47,6 +47,7 @@ qa:
 	flake8 src/django_sysinfo tests
 	isort -rc src/django_sysinfo tests/ --check-only
 	check-manifest
+	coverage run --rcfile=tests/.coveragerc -m py.test
 
 docs:
 	#rm -f docs/django-sysinfo.rst
