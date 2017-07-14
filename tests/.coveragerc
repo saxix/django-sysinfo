@@ -1,11 +1,9 @@
 [run]
 branch = true
 source = django_sysinfo
-;include =
-;data_file = AAAIIIAAA
-parallel = true
+include =
 
-omit = **/django_sysinfo/__init__.py
+omit = django_sysinfo/__init__.py
 
 [paths]
 source =
