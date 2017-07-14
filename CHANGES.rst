@@ -4,8 +4,9 @@
 History
 =======
 
-1.1 dev
--------
+1.1 14 Jul 2017
+---------------
+* Django 1.11 compatibility
 * handle broken database connections
 * add new mail server informations
 * new 'checks' API
