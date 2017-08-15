@@ -7,8 +7,13 @@ from functools import wraps
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, JsonResponse
+from django.utils.cache import patch_cache_control
+from django.views.decorators.cache import never_cache
+
+from django_sysinfo.conf import config
 
 from .api import UNKNOWN, get_sysinfo, get_version, run_check
 
@@ -29,9 +34,9 @@ def http_basic_auth(func):
         from django.contrib.auth import authenticate, login
 
         if "HTTP_AUTHORIZATION" in request.META:
-            authmeth, auth = request.META["HTTP_AUTHORIZATION"].split(b" ", 1)
-            if authmeth.lower() == b"basic":
-                auth = codecs.decode(auth.strip(), "base64")
+            authmeth, auth = request.META["HTTP_AUTHORIZATION"].split(" ", 1)
+            if authmeth.lower() == "basic":
+                auth = codecs.decode(auth.encode("utf8").strip(), "base64")
                 username, password = auth.split(b":", 1)
                 user = authenticate(username=username, password=password)
                 if user and is_authorized(user):
@@ -47,16 +52,21 @@ def http_basic_login(func):
     return http_basic_auth(login_required(func))
 
 
-# class Encoder(DjangoJSONEncoder):
-#     def default(self, obj):
-#         if callable(obj):
-#             return obj.__name__
-#         return json.JSONEncoder.default(self, obj)
-
-
 def sysinfo(request):
+    KEY = 'sysinfo/info2'
     try:
-        return JsonResponse(get_sysinfo(request))
+        content = cache.get(KEY)
+
+        if not content:
+            content = get_sysinfo(request)
+
+        if config.ttl > 0:
+            cache.set(KEY, dict(content), config.ttl)
+
+        response = JsonResponse(content, safe=False)
+        patch_cache_control(response, max_age=config.ttl, public=False)
+
+        return response
     except Exception as e:  # pragma: no cover
         logger.exception(e)
         return JsonResponse({"Error": str(e)}, status=400)
@@ -72,6 +82,7 @@ def version(request, name):
     return JsonResponse(data, status=status)
 
 
+@never_cache
 def echo(request, value):
     return HttpResponse(value)
 

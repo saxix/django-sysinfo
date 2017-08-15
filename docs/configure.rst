@@ -18,6 +18,7 @@ available thru the `check` url
             "checks": {},
             "project": {
                 "mail": False,
+                "installed_apps": False,
                 "databases": False,
                 "MEDIA_ROOT": False,
                 "STATIC_ROOT": False,

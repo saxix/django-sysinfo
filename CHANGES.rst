@@ -4,6 +4,12 @@
 History
 =======
 
+1.2 15 Aug 2017
+---------------
+* fixex python 3.6 compatibility
+* add nes section `packages`
+* new config '_ttl' to set cache max_age attribute
+
 1.1 14 Jul 2017
 ---------------
 * Django 1.11 compatibility

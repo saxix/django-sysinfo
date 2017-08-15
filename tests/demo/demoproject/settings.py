@@ -118,6 +118,31 @@ CACHES = {
     }
 }
 
+LOGGING = {
+    'default_level': 'INFO',
+    'version': 1,
+    'disable_existing_loggers': True,
+    'handlers': {
+        'null': {
+            'class': 'logging.NullHandler',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'root': {
+        'level': 'NOTSET',
+        'handlers': ['console'],
+    },
+    'loggers': {
+        '': {
+            'level': 'ERROR',
+        },
+
+    }
+}
+
+
 SYSINFO = {"host": True,
            "os": True,
            "python": True,

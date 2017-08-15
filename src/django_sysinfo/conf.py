@@ -35,18 +35,20 @@ def merge(a, b, path=None):
     return a
 
 
-DEFAULTS = {"os": False,
-            "modules": False,
-            "python": False,
-            "host": False,
-            "extra": False,
+DEFAULTS = {"_ttl": 0,
+            "os": True,
+            "modules": True,
+            "python": True,
+            "host": True,
+            "extra": {},
             "checks": {},
+            "installed_apps": True,
             "project": {
-                "mail": False,
-                "databases": False,
-                "MEDIA_ROOT": False,
-                "STATIC_ROOT": False,
-                "CACHES": False}
+                "mail": True,
+                "databases": True,
+                "MEDIA_ROOT": True,
+                "STATIC_ROOT": True,
+                "CACHES": True}
             }
 
 
@@ -65,6 +67,10 @@ class Config(object):
         self._config = DEFAULTS.copy()
         merge(self._config, config)
 
+    @property
+    def ttl(self):
+        return int(self._ttl)
+
     def __getattr__(self, item):
         if item in self._config:
             return self._config[item]
@@ -72,7 +78,8 @@ class Config(object):
             if not self._config["project"]:
                 return False
             return self._config["project"][item]
-        raise AttributeError
+        return None
+        # raise AttributeError("Config does not have attribute {}".format(item))
 
     def __repr__(self):
         return str({"host": self.host,
