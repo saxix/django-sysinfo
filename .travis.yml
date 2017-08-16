@@ -3,23 +3,20 @@
 language: python
 
 python:
-  - "3.5"
+  - 2.7
+  - 3.5
+  - 3.6
 
 services:
   - MySQL
   - PostgreSQL
 
 env:
-  - TOXENV=py27-d17
-  - TOXENV=py27-d18
-  - TOXENV=py27-d19
-  - TOXENV=py27-d110
-  - TOXENV=py27-d111
+  - DJANGO=1.8
+  - DJANGO=1.9
+  - DJANGO=1.10
+  - DJANGO=1.11
 
-  - TOXENV=py35-d18
-  - TOXENV=py35-d19
-  - TOXENV=py35-d110
-  - TOXENV=py35-d111
 
 before_install:
   - pip install codecov
@@ -29,7 +26,7 @@ install:
 
 
 script:
-  - tox -e $TOXENV -- py.test tests -v --capture=no --cov=django_sysinfo --cov-report=xml --cov-config=tests/.coveragerc
+  - tox -e "py${TRAVIS_PYTHON_VERSION//.}-d${DJANGO//.}" -- py.test tests -v --capture=no --cov=django_sysinfo --cov-report=xml --cov-config=tests/.coveragerc
 
 before_success:
   - coverage erase

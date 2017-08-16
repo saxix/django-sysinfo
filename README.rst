@@ -8,61 +8,17 @@ django-sysinfo
 .. image:: https://travis-ci.org/saxix/django-sysinfo.png?branch=master
     :target: https://travis-ci.org/saxix/django-sysinfo
 
-Simple django app to expose system infos like libraries version, database server...
+Simple django app to expose system infos like libraries version, database server.
 
-Rationale
----------
+Easy to extend to add custom checks.
 
-In our environment we manage dozens of Django applications and sometimes we need to answer questions like:
+Features
+--------
 
-    - which application is using this broken/outdated package ?
-    - which application is using that database ?
-
-
-scan all the installed sites, is tedious, we have a documentation site with
-all these infos, but we want to keep it always updated.
-Here where django-sysinfo comes to help.
-
-
-It provides a simple view that returns a json response containing:
-
-- environment:
-    - installed modules and version
-
-- project:
-    - MEDIA_ROOT/STATIC_ROOT path and available disk space
-    - django installed apps
-    - process path
-    - temp dir path
-    - databases:
-        - ip
-        - engine
-        - version
-    - mail server
-
-- os:
-    - name
-
-- python:
-    - version
-    - executable path
-
-- host:
-    - cpu(s) number
-    - free/total memory
-    - NIC list and relative IP addresses
-
-- extra:
-    <user defined functions>
-
-
-You can add entries and/or remove what can be dangerous in your enviroment.
-The url is protected with Basic Authentication without install `RemoteUserBackend`.
-
-Allowed user can be restricted using ``settings.SYSINFO_USERS``
- if not exists any superuser can use the endpoint::
-
-    settings.SYSINFO_USERS = ['username',]
+    - dump system informations
+    - check API to add custom checks
+    - simple echo
+    - retrieve library version
 
 
 Quickstart
@@ -125,13 +81,13 @@ Links
 .. |master-build| image:: https://secure.travis-ci.org/saxix/django-sysinfo.png?branch=master
                     :target: http://travis-ci.org/saxix/django-sysinfo/
 
-.. |master-cov| image:: https://coveralls.io/repos/saxix/django-sysinfo/badge.svg?branch=master&service=github
-            :target: https://coveralls.io/github/saxix/django-sysinfo?branch=master
+.. |master-cov| image:: https://codecov.io/github/saxix/django-sysinfo/coverage.svg?branch=master
+            :target: https://codecov.io/github/saxix/django-sysinfo?branch=master
 
 
 .. |dev-build| image:: https://secure.travis-ci.org/saxix/django-sysinfo.png?branch=develop
                   :target: http://travis-ci.org/saxix/django-sysinfo/
 
-.. |dev-cov| image:: https://coveralls.io/repos/saxix/django-sysinfo/badge.svg?branch=develop&service=github
-        :target: https://coveralls.io/github/saxix/django-sysinfo?branch=develop
+.. |dev-cov| image:: https://codecov.io/github/saxix/django-sysinfo/coverage.svg?branch=develop
+        :target: https://codecov.io/github/saxix/django-sysinfo?branch=develop
 

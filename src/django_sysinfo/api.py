@@ -176,6 +176,7 @@ def get_project(**kwargs):
 
     if config.installed_apps:
         project["installed_apps"] = get_installed_apps()
+
     if config.mail:
         project["mail"] = get_mail(**kwargs)
     return project

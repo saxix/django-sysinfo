@@ -4,3 +4,6 @@ pdbpp
 pip
 psycopg2
 check-manifest
+twine
+wheel
+

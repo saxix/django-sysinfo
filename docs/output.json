@@ -38,14 +38,14 @@
     "maxunicode": [
       65535,
       "WARN"
-    ]
-  },
-  "modules": {
-    "alabaster": "0.7.7",
-    "apipkg": "1.4",
-    "django": "1.9.1",
-    "pytest": "2.8.5",
-    "xlwt-future": "0.8.0"
+    ],
+    "modules": {
+      "alabaster": "0.7.7",
+      "apipkg": "1.4",
+      "django": "1.9.1",
+      "pytest": "2.8.5",
+      "xlwt-future": "0.8.0"
+    }
   },
   "project": {
     "current_dir": "/data/PROJECTS/django-sysinfo",
@@ -74,8 +74,7 @@
     },
     "installed_apps": [
       [
-        "django_sysinfo",
-        "0.4a20160403211457"
+        "django_sysinfo", "0.4a20160403211457"
       ]
     ]
   },

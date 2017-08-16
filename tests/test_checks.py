@@ -5,10 +5,15 @@ import json
 import logging
 
 import pytest
-from django.core.urlresolvers import reverse
 
 from django_sysinfo.api import get_checks, run_check
 from django_sysinfo.conf import config
+
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
+
 
 logger = logging.getLogger(__name__)
 

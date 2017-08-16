@@ -61,12 +61,12 @@ def test_http_basic(rf, user, monkeypatch, settings):
     monkeypatch.setattr("django.contrib.auth.login", lambda r, u: True)
     f = http_basic_auth(lambda r: "OK")
 
-    auth_headers = {"HTTP_AUTHORIZATION": b"Basic " + base64.b64encode("username:password".encode())}
+    auth_headers = {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode(b"username:password").decode()}
     r = rf.get("/", **auth_headers)
     with pytest.raises(PermissionDenied):
         f(r)
 
-    auth_headers = {"HTTP_AUTHORIZATION": b"Basic " + base64.b64encode("sax:123".encode())}
+    auth_headers = {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode(b"sax:123").decode()}
     r = rf.get("/", **auth_headers)
     assert f(r) == "OK"
 
