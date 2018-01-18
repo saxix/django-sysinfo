@@ -12,10 +12,10 @@ services:
   - PostgreSQL
 
 env:
-  - DJANGO=1.8
   - DJANGO=1.9
   - DJANGO=1.10
   - DJANGO=1.11
+  - DJANGO=2.0
 
 
 before_install:
