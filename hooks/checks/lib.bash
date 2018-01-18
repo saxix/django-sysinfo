@@ -110,7 +110,7 @@ gitflow_update_authors() {
 #    ROOTDIR=$(git rev-parse --show-toplevel)
     AUTHORS=$(mktemp -t wfpoauth)
     # Create an up to date AUTHORS file
-    echo "WFP OAuth Server Authors
+    echo "Authors
     "> $AUTHORS
     git shortlog -ns --no-merges | cut -f2 >> $AUTHORS
 

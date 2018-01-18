@@ -10,20 +10,20 @@ available thru the `check` url
 
 .. code-block:: javascript
 
-    SYSINFO = {"os": False,
-            "modules": False,
-            "python": False,
-            "host": False,
-            "extra": False,
-            "checks": {},
-            "project": {
-                "mail": False,
-                "installed_apps": False,
-                "databases": False,
-                "MEDIA_ROOT": False,
-                "STATIC_ROOT": False,
-                "CACHES": False}
-            }
+    SYSINFO =  {"os": False,
+                "modules": False,
+                "python": False,
+                "host": False,
+                "extra": {},
+                "checks": {},
+                "project": {
+                    "mail": False,
+                    "installed_apps": False,
+                    "databases": False,
+                    "MEDIA_ROOT": False,
+                    "STATIC_ROOT": False,
+                    "CACHES": False}
+                }
 
 Sections
 ========

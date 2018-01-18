@@ -6,9 +6,9 @@ import logging
 
 import pytest
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
 
 from django_sysinfo.api import UNKNOWN
+from django_sysinfo.compat import reverse
 from django_sysinfo.views import http_basic_auth
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ def user(db):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_sysinfo(client, cache):
     response = client.get(reverse("sys-info"))
     data = json.loads(response.content.decode("utf8"))
@@ -38,14 +38,14 @@ def test_sysinfo(client, cache):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_echo(client, cache):
     response = client.get(reverse("sys-echo", args=["abc"]))
     assert response.content.decode("utf8") == "abc"
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_sysinfo_limit_Sections(client, cache):
     response = client.get("%s?s=os,host" % reverse("sys-info"))
     data = json.loads(response.content.decode("utf8"))
@@ -78,7 +78,7 @@ def test_http_basic_login(client):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_version(client):
     response = client.get(reverse("sys-version", args=["pytest"]))
     data = json.loads(response.content.decode("utf8"))
@@ -86,7 +86,7 @@ def test_version(client):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_version_wrong(client):
     response = client.get(reverse("sys-version", args=["@@@"]))
     data = json.loads(response.content.decode("utf8"))
@@ -95,7 +95,7 @@ def test_version_wrong(client):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_config(client, monkeypatch):
     monkeypatch.setattr("django_sysinfo.conf.config.host", False)
     monkeypatch.setattr("django_sysinfo.conf.config.os", False)

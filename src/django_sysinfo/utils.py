@@ -59,6 +59,8 @@ def humanize_bytes(bytes, raw=False, precision=1):
 
     >>> humanize_bytes(1)
     '1 byte'
+    >>> humanize_bytes(2)
+    '2.0 bytes'
     >>> humanize_bytes(1024)
     '1.0 kB'
     >>> humanize_bytes(1024*123)
@@ -88,7 +90,7 @@ def humanize_bytes(bytes, raw=False, precision=1):
     )
     if bytes == 1:
         return "1 byte"
-    for factor, suffix in abbrevs:
+    for factor, suffix in abbrevs:  # pragma: no cover
         if bytes >= factor:
             break
     return "%.*f %s" % (precision, bytes / factor, suffix)
@@ -150,20 +152,68 @@ def get_ips():
     return sorted(flatten(chain(get_network().values())))
 
 
-def get_package_version(application_name, app):  # noqa
-    version = None
+def get_package_version(application_name, app=None):  # noqa
+    """
+    # >>> get_package_version('django_sysinfo') == django_sysinfo.__version__
+    # True
+    # >>> with mock.patch('pkg_resources.get_distribution', None):
+    # ...     get_package_version('django_sysinfo') == django_sysinfo.__version__
+    # True
+
+    :param application_name:
+    :param app:
+    :return:
+
+    >>> from mock_import import mock_import
+    >>> import django_sysinfo, mock
+    >>> from mock_import import mock_import
+    >>> with mock_import(spec={'VERSION'}):
+    ...     import my_module
+    ...     my_module.VERSION = '1.0'
+    ...     assert get_package_version('my_module', my_module) == '1.0'
+
+
+    >>> with mock_import(spec=['VERSION'],VERSION='1.0'):
+    ...     import my_module
+    ...     assert get_package_version('my_module', my_module) == '1.0'
+
+    >>> with mock_import(spec=['__version__'], __version__='1.1'):
+    ...     import my_module
+    ...     assert get_package_version('my_module', my_module) == '1.1'
+
+    >>> with mock_import(spec=['get_version'], get_version=lambda : '1.2'):
+    ...     import my_module
+    ...     assert get_package_version('my_module', my_module) == '1.2'
+
+    >>> with mock_import(spec=['get_version'], get_version=mock.MagicMock(side_effect=Exception)):
+    ...     import my_module
+    ...     assert get_package_version('my_module', my_module) is None
+
+    >>> with mock_import(spec=['version'], version='1.3'):
+    ...     import my_module
+    ...     assert get_package_version('my_module', my_module) == '1.3'
+
+    >>> with mock_import(spec=['VERSION'], VERSION=[1,4]):
+    ...     import my_module
+    ...     assert get_package_version('my_module', my_module) == '1.4'
+
+    >>> with mock_import(spec=['VERSION'], VERSION=None):
+    ...     import my_module
+    ...     assert get_package_version('my_module', my_module) is None
+
+    >>> with mock_import(spec=[]):
+    ...     import my_module
+    ...     assert get_package_version('my_module', my_module) is None
+    """
 
     parts = application_name.split('.')
     module_name = parts[0]
-    # Try to pull version from pkg_resource first
-    # as it is able to detect version tagged with egg_info -b
-    if pkg_resources is not None:
-        # pull version from pkg_resources if distro exists
-        try:
-            return pkg_resources.get_distribution(module_name).version
-        except Exception:
-            pass
-
+    try:
+        return pkg_resources.get_distribution(module_name).version
+    except Exception:
+        pass
+    # if app is None:
+    #     app = __import__(module_name)
     if hasattr(app, 'get_version'):
         version = app.get_version
     elif hasattr(app, '__version__'):
@@ -172,6 +222,8 @@ def get_package_version(application_name, app):  # noqa
         version = app.VERSION
     elif hasattr(app, 'version'):
         version = app.version
+    else:
+        version = None
 
     if callable(version):
         try:

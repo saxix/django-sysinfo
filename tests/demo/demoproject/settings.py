@@ -3,6 +3,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import django
+
 here = os.path.dirname(__file__)
 # sys.path.append(os.path.abspath(os.path.join(here, os.pardir)))
 # sys.path.append(os.path.abspath(os.path.join(here, os.pardir, "demo")))
@@ -21,6 +23,13 @@ DATABASES = {
     "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": ":memory:"},
+    "mysql": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "sysinfo",
+        "HOST": "127.0.0.1",
+        "PORT": "",
+        "USER": "root",
+        "PASSWORD": ""},
 }
 
 TIME_ZONE = "Europe/Rome"
@@ -59,16 +68,27 @@ SECRET_KEY = "c73*n!y=)tziu^2)y*@5i2^)$8z$tx#b9*_r3i6o1ohxo%*2^a"
 _mkdir(STATIC_ROOT)
 _mkdir(MEDIA_ROOT)
 
-MIDDLEWARE_CLASSES = (
-    "django.middleware.common.CommonMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.RemoteUserMiddleware",
-    # "django.contrib.messages.middleware.MessageMiddleware",
-)
+if django.VERSION[0] == 2 or (django.VERSION[0] == 1 and django.VERSION[1] in (10, 11)):
+    MIDDLEWARE = (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    )
+else:
+    MIDDLEWARE_CLASSES = (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    )
+
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.RemoteUserBackend",
+    # "django.contrib.auth.backends.RemoteUserBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 ROOT_URLCONF = "demoproject.urls"
@@ -141,7 +161,6 @@ LOGGING = {
 
     }
 }
-
 
 SYSINFO = {"host": True,
            "os": True,

@@ -22,15 +22,15 @@ before_install:
   - pip install codecov
 
 install:
-  - pip install tox "coverage<=4.0" python-coveralls>=2.5 coveralls>=0.5 codecov
+  - pip install tox "coverage<=4.0" codecov
 
 
 script:
-  - tox -e "py${TRAVIS_PYTHON_VERSION//.}-d${DJANGO//.}" -- py.test tests -v --capture=no --cov=django_sysinfo --cov-report=xml --cov-config=tests/.coveragerc
+  - tox -e "py${TRAVIS_PYTHON_VERSION//.}-d${DJANGO//.}" -- py.test tests -v --capture=no --cov=django_sysinfo --cov-config=tests/.coveragerc
 
 before_success:
   - coverage erase
 
 after_success:
   - coverage combine
-  - coveralls
+  - codecov

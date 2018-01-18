@@ -26,19 +26,25 @@ logger = logging.getLogger(__name__)
 UNKNOWN = "unknown"
 
 
-def _run_database_statement(conn, stm):
+def _run_database_statement(conn, stm, offset=0):
     if not stm:
         return UNKNOWN
     c = conn.cursor()
     c.execute(stm)
     row = c.fetchone()
-    return row[0]
+    if row:
+        return row[offset]
 
 
 def _get_database_infos(conn):
     engine = conn.settings_dict.get("ENGINE")
     ret = OrderedDict()
-    if engine == "django.db.backends.postgresql_psycopg2":
+    if engine == "django.db.backends.mysql":
+        ret["version"] = _run_database_statement(conn, "SELECT VERSION();")
+        ret["user"] = _run_database_statement(conn, "SELECT USER();")
+        # ret["basedir"] = _run_database_statement(conn, "SHOW VARIABLES LIKE '%BASEDIR%';", 1)
+        # ret["max_connections"] = _run_database_statement(conn, "SHOW VARIABLES LIKE '%MAX_CONNECTIONS%';", 1)
+    elif engine == "django.db.backends.postgresql_psycopg2":
         import psycopg2.extensions
 
         ret["version"] = _run_database_statement(conn, "SHOW server_version;")
@@ -62,6 +68,8 @@ def _get_database_infos(conn):
         ret["version"] = _run_database_statement(conn, "select sqlite_version();")
     elif engine == "django.db.backends.oracle":
         ret["version"] = _run_database_statement(conn, "select * from v$version;")
+    else:
+        ret["info"] = 'DATABASE NOT SUPPORTED'
     return ret
 
 
@@ -170,6 +178,9 @@ def get_project(**kwargs):
     if config.STATIC_ROOT:
         project["STATIC_ROOT"] = OrderedDict([("path", settings.STATIC_ROOT),
                                               ("disk", get_device_info(settings.STATIC_ROOT))])
+
+    if config.DATABASES:
+        project["DATABASES"] = get_databases()
 
     if config.CACHES:
         project["CACHES"] = get_caches_info()

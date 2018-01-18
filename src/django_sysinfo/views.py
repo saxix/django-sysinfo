@@ -32,12 +32,11 @@ def http_basic_auth(func):
     @wraps(func)
     def _decorator(request, *args, **kwargs):
         from django.contrib.auth import authenticate, login
-
         if "HTTP_AUTHORIZATION" in request.META:
             authmeth, auth = request.META["HTTP_AUTHORIZATION"].split(" ", 1)
             if authmeth.lower() == "basic":
-                auth = codecs.decode(auth.encode("utf8").strip(), "base64")
-                username, password = auth.split(b":", 1)
+                auth = codecs.decode(auth.encode("utf8").strip(), "base64").decode()
+                username, password = auth.split(":", 1)
                 user = authenticate(username=username, password=password)
                 if user and is_authorized(user):
                     login(request, user)
