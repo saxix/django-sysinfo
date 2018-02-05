@@ -278,6 +278,6 @@ def get_sysinfo(request):
 def get_version(name):
     try:
         version = get_distribution(name).version
-    except:
+    except Exception:
         version = UNKNOWN
     return version

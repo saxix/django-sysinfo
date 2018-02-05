@@ -7,7 +7,9 @@ from django.core.signals import request_started
 from django.db import IntegrityError
 from django.dispatch import receiver
 
-from django_sysinfo.views import check, echo, http_basic_login, sysinfo, version
+from django_sysinfo.views import (
+    admin_sysinfo, check, echo, http_basic_login, sysinfo, version
+)
 
 urlpatterns = (
     url("sys/info-auth/$", http_basic_login(sysinfo), name="sys-info-auth"),
@@ -17,6 +19,7 @@ urlpatterns = (
     url("sys/version/(?P<name>.*)/$", version, name="sys-version"),
     url("sys/echo/(?P<value>.*)/$", echo, name="sys-echo"),
     url("check/(?P<id>.*)/$", check, name="sys-check"),
+    url("admin/sysinfo/$", admin_sysinfo, name="sys-admin-info"),
 
     # url("info/$", http_basic_login(sysinfo), name="sys-info"),
     # url("version/(?P<name>.*)/$", http_basic_login(version), name="sys-version"),
