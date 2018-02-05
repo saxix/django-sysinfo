@@ -2,9 +2,13 @@
 Sample output
 =============
 
+JSON
+----
+
 .. literalinclude:: output.json
 
 
-HTML Page
----------
+HTML
+----
 
+.. image:: images/info2.png
