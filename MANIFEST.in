@@ -11,7 +11,7 @@ exclude Makefile
 exclude coverage.xml
 exclude pytest.xml
 
-recursive-include src/django_sysinfo *.py
+recursive-include src/django_sysinfo *.*
 recursive-include src/requirements *.pip
 recursive-include tests *.py
 recursive-include tests .coveragerc

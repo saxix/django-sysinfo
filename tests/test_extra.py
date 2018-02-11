@@ -5,11 +5,11 @@ import json
 import logging
 
 import pytest
-from django.core.urlresolvers import reverse
 
 from demoproject.models import test_sysinfo
 
 from django_sysinfo.api import get_extra
+from django_sysinfo.compat import reverse
 from django_sysinfo.conf import config
 
 logger = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ def test_base(monkeypatch):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_extra(client, monkeypatch):
     from demoproject.models import test_sysinfo
 
@@ -53,7 +53,7 @@ def test_extra(client, monkeypatch):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_extra_url(client, monkeypatch):
     from demoproject.models import test_sysinfo
 

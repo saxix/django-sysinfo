@@ -6,10 +6,11 @@ import logging
 from functools import wraps
 
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
 from django.utils.cache import patch_cache_control
 from django.views.decorators.cache import never_cache
 
@@ -32,12 +33,11 @@ def http_basic_auth(func):
     @wraps(func)
     def _decorator(request, *args, **kwargs):
         from django.contrib.auth import authenticate, login
-
         if "HTTP_AUTHORIZATION" in request.META:
             authmeth, auth = request.META["HTTP_AUTHORIZATION"].split(" ", 1)
             if authmeth.lower() == "basic":
-                auth = codecs.decode(auth.encode("utf8").strip(), "base64")
-                username, password = auth.split(b":", 1)
+                auth = codecs.decode(auth.encode("utf8").strip(), "base64").decode()
+                username, password = auth.split(":", 1)
                 user = authenticate(username=username, password=password)
                 if user and is_authorized(user):
                     login(request, user)
@@ -93,3 +93,11 @@ def check(request, id):
         return JsonResponse({"message": ret}, status=status)
     except Exception as e:  # pragma: no cover
         return JsonResponse({"error": str(e)}, status=500)
+
+
+@user_passes_test(is_authorized)
+def admin_sysinfo(request):
+    context = {'title': 'sysinfo',
+               'infos': get_sysinfo(request)
+               }
+    return render(request, 'admin/sysinfo/sysinfo.html', context)

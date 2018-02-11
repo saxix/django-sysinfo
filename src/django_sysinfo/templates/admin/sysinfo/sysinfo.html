@@ -1,0 +1,28 @@
+{% extends "admin/base_site.html" %}{% load i18n sysinfo static %}
+{% block extrahead %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "sysinfo/sysinfo.css" %}"/>
+
+{% endblock %}
+{% block userlinks %}
+{% endblock userlinks %}
+{% block breadcrumbs %}
+  {{ block.super }}
+{% endblock %}
+{% block content_title %}{% if title %}<h1>System Information</h1>{% endif %}{% endblock %}
+
+{% block content %}
+  <a name="top"/>
+  <div>
+    <a href="#project">Project</a>
+    - <a href="#python">Python</a>
+    - <a href="#os">OS</a>
+    - <a href="#modules">Modules</a>
+    - <a href="#host">Host</a>
+  </div>
+  {% section 'project' %}
+  {% section 'python' %}
+  {% section 'os' %}
+  {% section 'host' %}
+  {% section 'modules' %}
+{% endblock %}

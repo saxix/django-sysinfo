@@ -15,7 +15,9 @@ logger = logging.getLogger(__name__)
 @pytest.mark.django_db
 def test_database():
     ret = get_databases()
-    assert ret
+    assert ret['default']['engine'] == 'django.db.backends.postgresql_psycopg2'
+    assert ret['sqlite']['engine'] == 'django.db.backends.sqlite3'
+    assert ret['mysql']['engine'] == 'django.db.backends.mysql'
 
 
 @pytest.mark.django_db
@@ -36,12 +38,12 @@ def test_mail_broken(settings):
 
 
 @pytest.mark.django_db
+@pytest.mark.filterwarnings('ignore:Overriding setting DATABASES')
 def test_broken_database(settings, monkeypatch):
     settings.DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": ":memory:"},
-
         "broken": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
             "NAME": "not-existent-db",

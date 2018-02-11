@@ -29,7 +29,7 @@ develop:
 
 
 clean:
-	rm -fr ./~build dist *.egg-info .coverage pep8.out \
+	rm -fr ./~build build dist *.egg-info .coverage pep8.out \
 	    coverage.xml flake.out pytest.xml geo.sqlite MANIFEST
 	find . -name __pycache__ -o -name "*.py?" -o -name "*.orig" -prune | xargs rm -rf
 	find src -name django.mo | xargs rm -f

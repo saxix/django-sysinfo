@@ -4,6 +4,12 @@
 History
 =======
 
+1.3 (10 Feb 2018)
+-----------------
+* add HTML info page
+* Dropped support for old Django (<1.9) versions and Python 2.6
+* Django 2.0 support has been added.
+
 1.2 16 Aug 2017
 ---------------
 * fixex python 3.6 compatibility

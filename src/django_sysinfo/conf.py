@@ -54,13 +54,13 @@ DEFAULTS = {"_ttl": 0,
 
 class Config(object):
     """
-    >>> c = Config({"os": True})
-    >>> c.os, c.python
-    (True, False)
-    >>> c = Config({"os": True, "project": False})
-    >>> c.project
+    >>> c = Config({"os": False})
+    >>> c.os, c.python, c.project['mail'], c.MEDIA_ROOT
+    (False, True, True, True)
+    >>> c = Config({"os": True, "installed_apps": False})
+    >>> c.installed_apps
     False
-
+    >>> assert repr(c)
     """
 
     def __init__(self, config):
@@ -75,8 +75,8 @@ class Config(object):
         if item in self._config:
             return self._config[item]
         elif item in self._config["project"]:
-            if not self._config["project"]:
-                return False
+            # if not self._config["project"]:
+            #     return False
             return self._config["project"][item]
         return None
         # raise AttributeError("Config does not have attribute {}".format(item))

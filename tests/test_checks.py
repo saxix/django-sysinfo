@@ -7,13 +7,8 @@ import logging
 import pytest
 
 from django_sysinfo.api import get_checks, run_check
+from django_sysinfo.compat import reverse
 from django_sysinfo.conf import config
-
-try:
-    from django.urls import reverse
-except ImportError:
-    from django.core.urlresolvers import reverse
-
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +60,7 @@ def test_error_custom_code(monkeypatch):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_single_check(client, monkeypatch):
     monkeypatch.setattr(config, "checks", {"a": lambda x: (True, 200)})
     response = client.get(reverse("sys-check", args=["a"]))
@@ -74,7 +69,7 @@ def test_single_check(client, monkeypatch):
 
 
 @pytest.mark.django_db
-@pytest.mark.urls("urls")
+# @pytest.mark.urls("urls")
 def test_checks(client, monkeypatch):
     monkeypatch.setattr(config, "checks", {"a": lambda x: (True, 200),
                                            "b": lambda x: (False, 500),
