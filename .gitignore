@@ -11,3 +11,5 @@ __pycache__
 /manage.py
 /.coverage.jeeg-*
 .idea/
+.DS_Store
+.pytest_cache/
