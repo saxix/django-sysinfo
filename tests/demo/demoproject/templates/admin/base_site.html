@@ -1,0 +1,8 @@
+{% extends "admin/base.html" %}{% load i18n %}
+{% block userlinks %}
+    {{ block.super }}
+    {% url 'admin_info' as sysinfo %}
+    {% if sysinfo %}
+        <a href="{{ sysinfo }}">{% trans 'Sys Infos' %}</a>
+    {% endif %}
+{% endblock %}

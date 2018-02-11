@@ -1,4 +1,5 @@
 coverage
+django-webtest
 flake8
 mock>=1.0.1
 mock-import

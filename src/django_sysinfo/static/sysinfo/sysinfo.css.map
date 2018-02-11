@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,qBAAsB;EACpB,KAAK,EAAE,IAAI;EACX,wBAAG;IACD,eAAe,EAAE,IAAI;EAEvB,gCAAW;IACT,WAAW,EAAE,IAAI;IACjB,OAAO,EAAE,YAAY;IACrB,KAAK,EAAE,KAAK;;AAKd,kDAA0C;EACxC,OAAO,EAAE,YAAY;EACrB,KAAK,EAAE,KAAK",
+"sources": ["sysinfo.scss"],
+"names": [],
+"file": "sysinfo.css"
+}

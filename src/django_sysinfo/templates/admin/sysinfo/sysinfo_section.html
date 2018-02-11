@@ -1,0 +1,50 @@
+{% load sysinfo %}<a name="{{ name|lower }}"/><h2>{{ name|title }}</h2>
+<div class="results">
+  <table class="sysinfo-results">
+    <thead>
+    </thead>
+    <tbody>
+    {% for key, value in section %}
+      <tr class="{% cycle 'row1' 'row2' %} {{ name }} {{ key }}">
+        <td class="key">{{ key }}</td>
+        <td class="value">
+          {% if key == "MEDIA_ROOT" or key == "STATIC_ROOT" %}
+            {{ value.path }}
+          {% elif key == "CACHES" %}
+            <ul>{% for k,v in value.items %}
+              <span class="label">{{ k }}</span>
+              <ul>{% for k1,v1 in v.items %}
+                <li><span class="label">{{ k1 }}</span><span>{{ v1 }}</span></li>
+              {% endfor %}</ul>
+            {% endfor %}</ul>
+          {% elif key == "mail" %}
+            <ul>
+              <li><span class="label">backend</span>{{ value.backend }}</li>
+              <li><span class="label">host</span>{{ value.host }}</li>
+              <li><span class="label">TLS</span>{{ value.tls }}</li>
+              <li><span class="label">SSL</span>{{ value.ssl }}</li>
+              <li><span class="label">status</span>{{ value.status }}</li>
+            </ul>
+          {% elif key == "installed_apps" %}
+            <ul>{% for app, ver in value %}
+              <li><span class="name">{{ app }}</span><span>{{ ver }}</span></li>
+            {% endfor %}</ul>
+          {% elif key == "memory" %}
+            <ul>{% for k,v in value.items %}
+              <li><span class="label">{{ k }}</span>
+              <span >{{ v }}</span></li>
+            {% endfor %}</ul>
+          {% elif key == "network" %}
+            <ul>{% for k,v in value.items %}
+              <li><span class="label">{{ k }}</span>
+              <span >{{ v|join:" " }}</span></li>
+            {% endfor %}</ul>
+          {% else %}
+            {{ value }}
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
