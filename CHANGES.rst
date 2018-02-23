@@ -4,9 +4,10 @@
 History
 =======
 
-1.3.1 (22 Feb 2018)
+1.3.1 (23 Feb 2018)
 -----------------
-* add `extra` sectio to html output
+* add `extra` section to html output
+* minor changes to html output
 
 
 1.3 (10 Feb 2018)
