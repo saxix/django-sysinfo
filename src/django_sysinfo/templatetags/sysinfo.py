@@ -6,7 +6,11 @@ register = Library()
 
 @register.simple_tag(takes_context=True)
 def section(context, section_name):
-    data = context['infos'][section_name].items()
+    try:
+        data = context['infos'][section_name].items()
+    except KeyError as e:
+        accepted = ",".join(context['infos'].keys())
+        raise KeyError("{0}: ({1})".format(e, accepted))
     name = section_name.lower()
 
     ctx = {

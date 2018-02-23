@@ -5,6 +5,7 @@
 
 {% endblock %}
 {% block userlinks %}
+  <a name="top"/>
 {% endblock userlinks %}
 {% block breadcrumbs %}
   {{ block.super }}
@@ -12,17 +13,22 @@
 {% block content_title %}{% if title %}<h1>System Information</h1>{% endif %}{% endblock %}
 
 {% block content %}
-  <a name="top"/>
   <div>
     <a href="#project">Project</a>
     - <a href="#python">Python</a>
     - <a href="#os">OS</a>
     - <a href="#modules">Modules</a>
     - <a href="#host">Host</a>
+    - <a href="#extra">Extras</a>
+  {% url "sys-info" as json %}
+  {% if json %}
+    <span style="float:right"><a href="{{ json }}">view json</a></span>
+  {% endif %}
   </div>
   {% section 'project' %}
   {% section 'python' %}
   {% section 'os' %}
   {% section 'host' %}
   {% section 'modules' %}
+  {% section 'extra' %}
 {% endblock %}

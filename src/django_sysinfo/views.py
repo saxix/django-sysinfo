@@ -97,7 +97,10 @@ def check(request, id):
 
 @user_passes_test(is_authorized)
 def admin_sysinfo(request):
+    infos = get_sysinfo(request)
+    infos.setdefault('extra', {})
+    infos.setdefault('checks', {})
     context = {'title': 'sysinfo',
-               'infos': get_sysinfo(request)
+               'infos': infos
                }
     return render(request, 'admin/sysinfo/sysinfo.html', context)
