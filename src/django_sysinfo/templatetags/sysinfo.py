@@ -9,7 +9,8 @@ def section(context, section_name):
     try:
         data = context['infos'][section_name].items()
     except KeyError as e:
-        raise KeyError(f"{e}: {context['infos'].keys()}")
+        accepted = ",".join(context['infos'].keys())
+        raise KeyError("{0}: ({1})".format(e, accepted))
     name = section_name.lower()
 
     ctx = {
