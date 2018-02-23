@@ -253,7 +253,6 @@ handlers = OrderedDict([("host", get_host),
                         ("python", get_python),
                         ("modules", get_modules),
                         ("project", get_project),
-                        # ("databases", get_databases),
                         ("extra", get_extra),
                         ("checks", get_checks)])
 
