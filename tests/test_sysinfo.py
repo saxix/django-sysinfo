@@ -4,8 +4,9 @@ from __future__ import absolute_import, print_function, unicode_literals
 import json
 import logging
 
-import pytest
 from django.core.exceptions import PermissionDenied
+
+import pytest
 
 from django_sysinfo.api import UNKNOWN
 from django_sysinfo.compat import reverse

@@ -98,8 +98,10 @@ def humanize_bytes(bytes, raw=False, precision=1):
 
 def get_network(families=[socket.AF_INET]):
     """
-    >>> from psutil._common import snic
+    # >>> from psutil._common import snic
     >>> import mock
+    >>> from collections import namedtuple
+    >>> snic = namedtuple('snic', ['family', 'address', 'netmask', 'broadcast', 'ptp'])
     >>> MOCK = {
     ... "awdl0": [snic(family=30, address="fe80::3854:80ff:fe54:7bf8%awdl0", netmask="ffff:ffff:ffff:ffff::", broadcast=None, ptp=None)],
     ... "en0":   [snic(family=2, address="192.168.10.200", netmask="255.255.255.0", broadcast="192.168.10.255", ptp=None),
@@ -136,8 +138,9 @@ def get_network(families=[socket.AF_INET]):
 
 def get_ips():
     """
-    >>> from psutil._common import snic
     >>> import mock
+    >>> from collections import namedtuple
+    >>> snic = namedtuple('snic', ['family', 'address', 'netmask', 'broadcast', 'ptp'])
     >>> MOCK = {
     ... "awdl0": [snic(family=30, address="fe80::3854:80ff:fe54:7bf8%awdl0", netmask="ffff:ffff:ffff:ffff::", broadcast=None, ptp=None)],
     ... "en0":   [snic(family=2, address="192.168.10.200", netmask="255.255.255.0", broadcast="192.168.10.255", ptp=None),
