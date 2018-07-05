@@ -4,6 +4,11 @@
 History
 =======
 
+1.3.2 (05 Jul 2018)
+-----------------
+* removes pip dependency
+
+
 1.3.1 (23 Feb 2018)
 -----------------
 * add `extra` section to html output

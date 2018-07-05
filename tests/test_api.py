@@ -4,8 +4,9 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 from collections import OrderedDict
 
-import pytest
 from django.db import connections
+
+import pytest
 
 from django_sysinfo.api import get_databases, get_mail
 

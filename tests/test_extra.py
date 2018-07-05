@@ -5,7 +5,6 @@ import json
 import logging
 
 import pytest
-
 from demoproject.models import test_sysinfo
 
 from django_sysinfo.api import get_extra

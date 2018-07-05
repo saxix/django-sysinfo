@@ -23,7 +23,7 @@ help:
 
 
 develop:
-	pip install -U pip
+	pipenv install
 	pip install -e .[dev,process]
 	$(MAKE) .setup-git
 

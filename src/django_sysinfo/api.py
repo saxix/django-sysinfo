@@ -10,13 +10,13 @@ import tempfile
 from collections import OrderedDict
 from pkg_resources import get_distribution
 
-import pip
-import six
 from django.conf import settings
 from django.db import connections
 from django.utils.module_loading import import_string
 
-from django_sysinfo.compat import get_installed_apps
+import six
+
+from django_sysinfo.compat import get_installed_apps, get_installed_distributions
 from django_sysinfo.utils import get_network, humanize_bytes
 
 from .conf import config
@@ -92,7 +92,7 @@ def get_databases(**kwargs):
 
 def get_modules(**kwargs):
     modules = OrderedDict()
-    for i in sorted(pip.get_installed_distributions(local_only=True),
+    for i in sorted(get_installed_distributions(),
                     key=lambda i: i.project_name.lower()):
         modules[i.project_name.lower()] = i.version
     return modules

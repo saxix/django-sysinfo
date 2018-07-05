@@ -29,6 +29,48 @@ def pytest_addoption(parser):
                      dest="log_add",
                      help="add package to log")
 
+    parser.addoption("--docker", default=False, action="store_true",
+                     help="start docker containers")
+
+
+# @pytest.fixture(scope="module")
+# def client():
+#     import docker
+#     return docker.from_env()
+#
+#
+# @pytest.fixture(scope="module")
+# def image(client):
+#     client.images.build(path=, tag=NAME, rm=True)
+#     yield client
+#     client.images.remove(NAME)
+#
+#
+# @pytest.fixture(scope="module", autouse=True)
+# def container(client):
+#
+#     c = client.containers.run("mysql:5.7",
+#                               remove=True,
+#                               detach=True)
+#     # FIXME: remove me (print)
+#     print(111, 4444, c)
+#     yield c
+#     c.stop()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def mysql(request):
+    if request.config.option.docker:
+        import docker
+        client = docker.from_env()
+        c = client.containers.run("mysql:8",
+                                  ports={"3306": "3306"},
+                                  remove=True,
+                                  detach=True)
+    yield
+    if request.config.option.docker:
+        c.stop()
+
 
 def pytest_configure(config):
     warnings.simplefilter("once", DeprecationWarning)
