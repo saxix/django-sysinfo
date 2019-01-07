@@ -38,6 +38,7 @@ def test_extra(client, monkeypatch):
     monkeypatch.setattr("django_sysinfo.conf.config.python", False)
     monkeypatch.setattr("django_sysinfo.conf.config.modules", False)
     monkeypatch.setattr("django_sysinfo.conf.config.project", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.environ", False)
     monkeypatch.setattr("django_sysinfo.conf.config.databases", False)
     monkeypatch.setattr("django_sysinfo.conf.config.installed_apps", False)
     monkeypatch.setattr("django_sysinfo.api.config.extra", {"test1": "demoproject.models.test_sysinfo",
@@ -61,6 +62,7 @@ def test_extra_url(client, monkeypatch):
     monkeypatch.setattr("django_sysinfo.conf.config.python", False)
     monkeypatch.setattr("django_sysinfo.conf.config.modules", False)
     monkeypatch.setattr("django_sysinfo.conf.config.project", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.environ", False)
     monkeypatch.setattr("django_sysinfo.conf.config.databases", False)
     monkeypatch.setattr("django_sysinfo.conf.config.installed_apps", False)
     monkeypatch.setattr("django_sysinfo.api.config.extra", {"test1": "demoproject.models.test_sysinfo",
