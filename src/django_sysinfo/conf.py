@@ -36,6 +36,9 @@ def merge(a, b, path=None):
 
 
 DEFAULTS = {"_ttl": 0,
+            "filter_environment": "django_sysinfo.utils.filter_env",
+            "masked_environment": ["PASS", "SECRET", "PASSWORD", "KEY"],
+            "hidden_environment": [],
             "os": True,
             "modules": True,
             "python": True,
@@ -43,6 +46,7 @@ DEFAULTS = {"_ttl": 0,
             "extra": {},
             "checks": {},
             "installed_apps": True,
+            "environ": True,
             "project": {
                 "mail": True,
                 "databases": True,
@@ -87,6 +91,7 @@ class Config(object):
                     "mail": self.mail,
                     "python": self.python,
                     "modules": self.modules,
+                    "environ": self.environ,
                     "project": self.project,
                     "databases": self.databases,
                     "installed_apps": self.installed_apps,

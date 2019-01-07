@@ -2,6 +2,8 @@
 from __future__ import absolute_import, division, print_function
 
 import logging
+import os
+
 import pkg_resources
 import psutil
 import socket
@@ -9,6 +11,8 @@ from collections import defaultdict
 from itertools import chain
 
 import six
+
+from django_sysinfo.conf import config
 
 logger = logging.getLogger(__name__)
 
@@ -265,3 +269,8 @@ def get_package_version(application_name, app=None):  # noqa
 #     packages['sys'] = '{0}.{1}.{2}'.format(*sys.version_info)
 #
 #     return OrderedDict(sorted(packages.items()))
+
+def filter_environment(key):
+    if key in config.masked_environment:
+        return "****"
+    return os.environ['key']
