@@ -8,6 +8,8 @@ import socket
 import sys
 import tempfile
 from collections import OrderedDict
+
+from django.views.debug import HIDDEN_SETTINGS, CLEANSED_SUBSTITUTE
 from pkg_resources import get_distribution
 
 from django.conf import settings
@@ -229,7 +231,6 @@ def get_checks(request=None):
 
     return checks
 
-
 def get_extra(config, request=None):
     extras = {}
     for k, v in config.extra.items():
@@ -248,8 +249,19 @@ def get_extra(config, request=None):
     return extras
 
 
+def get_environment(**kwargs):
+    ret = {}
+    for key, value in os.environ.items():
+        if HIDDEN_SETTINGS.search(key):
+            ret[key] = CLEANSED_SUBSTITUTE
+        else:
+            ret[key] = value
+    return ret
+
+
 handlers = OrderedDict([("host", get_host),
                         ("os", get_os),
+                        ("environ", get_environment),
                         ("python", get_python),
                         ("modules", get_modules),
                         ("project", get_project),

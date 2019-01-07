@@ -36,10 +36,7 @@ clean:
 
 
 fullclean:
-	rm -fr build/
-	rm -fr dist/
-	rm -fr *.egg-info
-	rm -fr .tox
+	rm -fr build/ dist/ *.egg-info .tox .pytest_cache .venv
 	find . -name *.sqlite -prune | xargs rm -rf
 	$(MAKE) clean
 
