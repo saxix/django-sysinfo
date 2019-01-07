@@ -4,6 +4,12 @@
 History
 =======
 
+1.4 (7 Jan 2019)
+-----------------
+* add filtering to admin page
+* fixes sections
+
+
 1.3.2 (05 Jul 2018)
 -----------------
 * removes pip dependency
