@@ -102,6 +102,7 @@ def test_config(client, monkeypatch):
     monkeypatch.setattr("django_sysinfo.conf.config.os", False)
     monkeypatch.setattr("django_sysinfo.conf.config.python", False)
     monkeypatch.setattr("django_sysinfo.conf.config.modules", False)
+    monkeypatch.setattr("django_sysinfo.conf.config.environ", False)
     monkeypatch.setattr("django_sysinfo.conf.config.project", False)
     monkeypatch.setattr("django_sysinfo.conf.config.databases", False)
     monkeypatch.setattr("django_sysinfo.conf.config.extra", False)
