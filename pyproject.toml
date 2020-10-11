@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "django-sysinfo"
+version = "2.0.0"
+description = "Simple django app to expose system infos: libraries version, databae server infos..."
+authors = ["sax <s.apostolico@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python  = "^3.6"
+pytz = "^2020.1"
+psutil = "*"
+
+[tool.poetry.dev-dependencies]
+tox = "^3.20.1"
+pytest = "^6.1.1"
+pytest-echo = "^1.7.1"
+django-webtest = "^1.9.7"
+pytest-pythonpath = "^0.7.3"
+isort = "^5.6.3"
+pytest-cov = "^2.10.1"
+pytest-django = "^3.10.0"
+mysqlclient = "^2.0.1"
+psycopg2-binary = "^2.8.6"
+mock_import = "^0.0.3"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
