@@ -25,7 +25,7 @@ install:
 
 
 script:
-  - tox -e "py${TRAVIS_PYTHON_VERSION//.}-d${DJANGO//.}" -- py.test tests -v --capture=no --cov=django_sysinfo --cov-config=tests/.coveragerc
+  - tox -e "py${TRAVIS_PYTHON_VERSION//.}-d${DJANGO//.}"
 
 before_success:
   - coverage erase

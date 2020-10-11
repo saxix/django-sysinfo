@@ -129,7 +129,6 @@ def get_network(families=[socket.AF_INET]):
     nic = psutil.net_if_addrs()
 
     ips = defaultdict(list)
-    # return nic
     for card, addresses in nic.items():
         for address in addresses:
             if address.family in families:
