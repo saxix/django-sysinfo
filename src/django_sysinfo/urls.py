@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 from django.conf.urls import url
 
 from django_sysinfo.views import check, echo, http_basic_login, sysinfo, version

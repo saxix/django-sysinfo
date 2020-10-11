@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function
-
 import logging
 import os
 
@@ -171,7 +169,6 @@ def get_package_version(application_name, app=None):  # noqa
     :param app:
     :return:
 
-    >>> from mock_import import mock_import
     >>> import django_sysinfo, mock
     >>> from mock_import import mock_import
     >>> with mock_import(spec={'VERSION'}):

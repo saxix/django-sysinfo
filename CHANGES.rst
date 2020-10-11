@@ -4,6 +4,13 @@
 History
 =======
 
+2.0 (11 Oct 2020)
+-----------------
+* drop support Python 2.x
+* drop support Django <2.2
+* PEP 518 compliant
+
+
 1.4 (7 Jan 2019)
 -----------------
 * add filtering to admin page

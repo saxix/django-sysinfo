@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, unicode_literals
-
 import logging
 import os
 import psutil
@@ -9,7 +7,7 @@ import sys
 import tempfile
 from collections import OrderedDict
 
-from django.views.debug import HIDDEN_SETTINGS, CLEANSED_SUBSTITUTE
+from django.views.debug import SafeExceptionReporterFilter
 from pkg_resources import get_distribution
 
 from django.conf import settings
@@ -26,6 +24,15 @@ from .conf import config
 logger = logging.getLogger(__name__)
 
 UNKNOWN = "unknown"
+
+if hasattr(SafeExceptionReporterFilter, 'cleanse_setting'):
+    cleanse_setting = SafeExceptionReporterFilter().cleanse_setting
+else:
+    def cleanse_setting(key, value):
+        from django.views.debug import HIDDEN_SETTINGS, CLEANSED_SUBSTITUTE
+        if HIDDEN_SETTINGS.search(key):
+            return CLEANSED_SUBSTITUTE
+        return value
 
 
 def _run_database_statement(conn, stm, offset=0):
@@ -69,7 +76,7 @@ def _get_database_infos(conn):
     elif engine == "django.db.backends.sqlite3":
         ret["version"] = _run_database_statement(conn, "select sqlite_version();")
     elif engine == "django.db.backends.oracle":
-        ret["version"] = _run_database_statement(conn, "select * from v$version;")
+        ret["version"] = _run_database_statement(conn, "select * from $version;")
     else:
         ret["info"] = 'DATABASE NOT SUPPORTED'
     return ret
@@ -231,6 +238,7 @@ def get_checks(request=None):
 
     return checks
 
+
 def get_extra(config, request=None):
     extras = {}
     for k, v in config.extra.items():
@@ -252,10 +260,7 @@ def get_extra(config, request=None):
 def get_environment(**kwargs):
     ret = {}
     for key, value in os.environ.items():
-        if HIDDEN_SETTINGS.search(key):
-            ret[key] = CLEANSED_SUBSTITUTE
-        else:
-            ret[key] = value
+        ret[key] = cleanse_setting(key, value)
     return ret
 
 
