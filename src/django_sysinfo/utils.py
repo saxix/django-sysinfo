@@ -121,10 +121,6 @@ def get_network(families=[socket.AF_INET]):
     ...     sorted(data_inet.values())
     [[u'127.0.0.1/255.0.0.0'], [u'192.168.10.200/255.255.255.0']]
 
-    >>> with mock.patch("psutil.net_if_addrs", side_effect=lambda: MOCK):
-    ...     data_inet6 = get_network([socket.AF_INET6])
-    ...     sorted(flatten(data_inet6.values()))
-    ['fe80::1%lo0/ffff:ffff:ffff:ffff::', 'fe80::3854:80ff:fe54:7bf8%awdl0/ffff:ffff:ffff:ffff::', 'fe80::6e40:8ff:feac:4f94%en0/ffff:ffff:ffff:ffff::']
     """
     nic = psutil.net_if_addrs()
 
