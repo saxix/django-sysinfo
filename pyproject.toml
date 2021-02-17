@@ -12,6 +12,7 @@ homepage = "https://github.com/saxix/django-sysinfo"
 python  = "^3.6"
 pytz = "^2020.1"
 psutil = "*"
+dateutil = "*"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.20.1"
