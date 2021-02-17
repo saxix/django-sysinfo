@@ -1,5 +1,6 @@
 .*
 ~*
+dist/
 *.py[cod]
 __pycache__
 poetry.lock
