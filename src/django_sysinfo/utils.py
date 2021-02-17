@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function
-
 import logging
 import os
 
@@ -123,15 +121,10 @@ def get_network(families=[socket.AF_INET]):
     ...     sorted(data_inet.values())
     [[u'127.0.0.1/255.0.0.0'], [u'192.168.10.200/255.255.255.0']]
 
-    >>> with mock.patch("psutil.net_if_addrs", side_effect=lambda: MOCK):
-    ...     data_inet6 = get_network([socket.AF_INET6])
-    ...     sorted(flatten(data_inet6.values()))
-    ['fe80::1%lo0/ffff:ffff:ffff:ffff::', 'fe80::3854:80ff:fe54:7bf8%awdl0/ffff:ffff:ffff:ffff::', 'fe80::6e40:8ff:feac:4f94%en0/ffff:ffff:ffff:ffff::']
     """
     nic = psutil.net_if_addrs()
 
     ips = defaultdict(list)
-    # return nic
     for card, addresses in nic.items():
         for address in addresses:
             if address.family in families:
@@ -171,7 +164,6 @@ def get_package_version(application_name, app=None):  # noqa
     :param app:
     :return:
 
-    >>> from mock_import import mock_import
     >>> import django_sysinfo, mock
     >>> from mock_import import mock_import
     >>> with mock_import(spec={'VERSION'}):
@@ -249,28 +241,6 @@ def get_package_version(application_name, app=None):  # noqa
 
     return six.text_type(version)
 
-# def get_all_package_versions():
-#     packages = {}
-#     for module_name, app in sys.modules.items():
-#         # ignore items that look like submodules
-#         if '.' in module_name:
-#             continue
-#
-#         if 'sys' == module_name:
-#             continue
-#
-#         version = get_package_version(module_name, app)
-#
-#         if version is None:
-#             continue
-#
-#         packages[module_name.lower()] = version
-#
-#     packages['sys'] = '{0}.{1}.{2}'.format(*sys.version_info)
-#
-#     return OrderedDict(sorted(packages.items()))
 
 def filter_environment(key):
-    if key in config.masked_environment:
-        return "****"
-    return os.environ['key']
+    return key in config.hidden_environment

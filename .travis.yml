@@ -3,24 +3,18 @@
 language: python
 
 python:
-  - 2.7
-  - 3.5
-  - 3.6
+  - 3.7
+  - 3.8
+
 
 services:
   - MySQL
   - PostgreSQL
 
 env:
-  - DJANGO=1.9
-  - DJANGO=1.10
-  - DJANGO=1.11
-  - DJANGO=2.0
-
-matrix:
-  exclude:
-    - python: 2.7
-      env: DJANGO=2.0
+  - DJANGO=2.2
+  - DJANGO=3.0
+  - DJANGO=3.1
 
 
 before_install:
@@ -31,7 +25,7 @@ install:
 
 
 script:
-  - tox -e "py${TRAVIS_PYTHON_VERSION//.}-d${DJANGO//.}" -- py.test tests -v --capture=no --cov=django_sysinfo --cov-config=tests/.coveragerc
+  - tox -e "py${TRAVIS_PYTHON_VERSION//.}-d${DJANGO//.}"
 
 before_success:
   - coverage erase

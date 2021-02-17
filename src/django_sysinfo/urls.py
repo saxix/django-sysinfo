@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
-from django.conf.urls import url
+from django.urls import path
 
 from django_sysinfo.views import check, echo, http_basic_login, sysinfo, version
 
 urlpatterns = (
-    url("info/$", http_basic_login(sysinfo), name="sys-info"),
-    url("version/(?P<name>.*)/$", http_basic_login(version), name="sys-version"),
-    url("echo/(?P<value>.*)/$", echo, name="sys-echo"),
-    url("check/(?P<id>.*)/$", http_basic_login(check), name="sys-check"),
+    path("info/$", http_basic_login(sysinfo), name="sys-info"),
+    path("version/<str:name>/$", http_basic_login(version), name="sys-version"),
+    path("echo/<str:value>/$", echo, name="sys-echo"),
+    path("check/<str:id>/$", http_basic_login(check), name="sys-check"),
 )

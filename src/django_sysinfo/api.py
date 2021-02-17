@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, unicode_literals
-
 import logging
 import os
+import re
+
 import psutil
 import socket
 import sys
 import tempfile
 from collections import OrderedDict
 
-from django.views.debug import HIDDEN_SETTINGS, CLEANSED_SUBSTITUTE
+from django.utils.functional import SimpleLazyObject
 from pkg_resources import get_distribution
 
 from django.conf import settings
@@ -26,6 +26,49 @@ from .conf import config
 logger = logging.getLogger(__name__)
 
 UNKNOWN = "unknown"
+
+
+def _lazy_re_compile(regex, flags=0):
+    """Lazily compile a regex with flags."""
+
+    def _compile():
+        # Compile the regex if it was not passed pre-compiled.
+        if isinstance(regex, (str, bytes)):
+            return re.compile(regex, flags)
+        else:
+            assert not flags, (
+                'flags must be empty if regex is passed pre-compiled'
+            )
+            return regex
+
+    return SimpleLazyObject(_compile)
+
+
+hidden_settings = _lazy_re_compile(config.masked_environment, flags=re.I)
+cleansed_substitute = '********************'
+
+
+def cleanse_setting(key, value):
+    """
+    Cleanse an individual setting key/value of sensitive content. If the
+    value is a dictionary, recursively cleanse the keys in that dictionary.
+    """
+    try:
+        if hidden_settings.search(key):
+            cleansed = f"{cleansed_substitute}{value[-3:]}"
+        elif isinstance(value, dict):
+            cleansed = {k: cleanse_setting(k, v) for k, v in value.items()}
+        elif isinstance(value, list):
+            cleansed = [cleanse_setting('', v) for v in value]
+        elif isinstance(value, tuple):
+            cleansed = tuple([cleanse_setting('', v) for v in value])
+        else:
+            cleansed = value
+    except TypeError:
+        # If the key isn't regex-able, just return as-is.
+        cleansed = value
+
+    return cleansed
 
 
 def _run_database_statement(conn, stm, offset=0):
@@ -69,7 +112,7 @@ def _get_database_infos(conn):
     elif engine == "django.db.backends.sqlite3":
         ret["version"] = _run_database_statement(conn, "select sqlite_version();")
     elif engine == "django.db.backends.oracle":
-        ret["version"] = _run_database_statement(conn, "select * from v$version;")
+        ret["version"] = _run_database_statement(conn, "select * from $version;")
     else:
         ret["info"] = 'DATABASE NOT SUPPORTED'
     return ret
@@ -231,6 +274,7 @@ def get_checks(request=None):
 
     return checks
 
+
 def get_extra(config, request=None):
     extras = {}
     for k, v in config.extra.items():
@@ -251,11 +295,10 @@ def get_extra(config, request=None):
 
 def get_environment(**kwargs):
     ret = {}
+    filter_environment = import_string(config.filter_environment)
     for key, value in os.environ.items():
-        if HIDDEN_SETTINGS.search(key):
-            ret[key] = CLEANSED_SUBSTITUTE
-        else:
-            ret[key] = value
+        if not filter_environment(key):
+            ret[key] = cleanse_setting(key, value)
     return ret
 
 

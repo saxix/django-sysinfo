@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function, unicode_literals
-
 from django.conf import settings
 
 
@@ -36,9 +34,9 @@ def merge(a, b, path=None):
 
 
 DEFAULTS = {"_ttl": 0,
-            "filter_environment": "django_sysinfo.utils.filter_env",
-            "masked_environment": ["PASS", "SECRET", "PASSWORD", "KEY"],
-            "hidden_environment": [],
+            "filter_environment": "django_sysinfo.utils.filter_environment",
+            "masked_environment": "API|TOKEN|KEY|SECRET|PASS|SIGNATURE|AUTH|_ID|SID",
+            "hidden_environment": ["DIRENV_DIFF"],
             "os": True,
             "modules": True,
             "python": True,
