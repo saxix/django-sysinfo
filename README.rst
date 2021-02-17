@@ -80,14 +80,14 @@ Links
 +--------------------+---------------+--------------+-------------------------+
 
 .. |master-build| image:: https://secure.travis-ci.com/saxix/django-sysinfo.png?branch=master
-                    :target: http://travis-ci.org/saxix/django-sysinfo/
+                    :target: http://travis-ci.com/saxix/django-sysinfo/
 
 .. |master-cov| image:: https://codecov.io/github/saxix/django-sysinfo/coverage.svg?branch=master
             :target: https://codecov.io/github/saxix/django-sysinfo?branch=master
 
 
 .. |dev-build| image:: https://secure.travis-ci.com/saxix/django-sysinfo.png?branch=develop
-                  :target: http://travis-ci.org/saxix/django-sysinfo/
+                  :target: http://travis-ci.com/saxix/django-sysinfo/
 
 .. |dev-cov| image:: https://codecov.io/github/saxix/django-sysinfo/coverage.svg?branch=develop
         :target: https://codecov.io/github/saxix/django-sysinfo?branch=develop
