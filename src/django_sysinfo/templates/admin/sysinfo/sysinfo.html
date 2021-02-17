@@ -16,13 +16,14 @@
 {% block content %}
   <input id="filterInput" type="text">
   <div>
-    <a href="#project">Project</a>
-    - <a href="#python">Python</a>
-    - <a href="#os">OS</a>
-    - <a href="#environ">Environment</a>
-    - <a href="#modules">Modules</a>
-    - <a href="#host">Host</a>
-    - <a href="#extra">Extras</a>
+{#    <a href="#process">Process</a>#}
+{#    - <a href="#project">Project</a>#}
+{#    - <a href="#python">Python</a>#}
+{#    - <a href="#os">OS</a>#}
+{#    - <a href="#environ">Environment</a>#}
+{#    - <a href="#modules">Modules</a>#}
+{#    - <a href="#host">Host</a>#}
+{#    - <a href="#extra">Extras</a>#}
     {% url "sys-info" as json %}
     {% if json %}
       <span style="float:right"><a href="{{ json }}">view json</a></span>
@@ -30,10 +31,11 @@
   </div>
   {% section 'project' %}
   {% section 'python' %}
+  {% section 'modules' %}
+  {% section 'host' %}
   {% section 'os' %}
   {% section 'environ' %}
-  {% section 'host' %}
-  {% section 'modules' %}
+  {% section 'process' %}
   {% section 'extra' %}
 {% endblock %}
 {% block footer %}
@@ -56,7 +58,7 @@
     $('#filterInput').on('keyup', delay(function () {
       let filter = this.value.toUpperCase();
       $('table.sysinfo-results tr').each(function (i, el) {
-        let txt = $(el).find('td,caption').text();
+        let txt = $(el).find('td').text();
         if (txt.toUpperCase().indexOf(filter) > -1) {
           $(el).closest('.sysinfo-results').show();
           $(el).show();

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-sysinfo"
-version = "2.2.0"
+version = "2.3.0"
 description = "Simple django app to expose system infos: libraries version, databae server infos..."
 authors = ["sax <s.apostolico@gmail.com>"]
 license = "MIT"
@@ -12,6 +12,7 @@ homepage = "https://github.com/saxix/django-sysinfo"
 python  = "^3.6"
 pytz = "^2020.1"
 psutil = "*"
+dateutil = "*"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.20.1"

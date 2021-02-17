@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
-import logging
-import os
-import re
+from datetime import datetime
 
 import psutil
-import socket
-import sys
-import tempfile
-from collections import OrderedDict
-
-from django.utils.functional import SimpleLazyObject
 from pkg_resources import get_distribution
 
 from django.conf import settings
 from django.db import connections
+from django.utils.functional import SimpleLazyObject
 from django.utils.module_loading import import_string
 
+import logging
+import os
+import re
 import six
+import socket
+import sys
+import tempfile
+import time
+from collections import OrderedDict
 
 from django_sysinfo.compat import get_installed_apps, get_installed_distributions
 from django_sysinfo.utils import get_network, humanize_bytes
@@ -211,6 +212,30 @@ def get_caches_info():
     return ret
 
 
+def get_process(**kwargs):
+    process = OrderedDict()
+    p = psutil.Process(None)
+    from dateutil.relativedelta import relativedelta
+
+    end_time = datetime.now()
+    start_time = datetime.fromtimestamp(p.create_time())
+    diff = relativedelta(end_time, start_time)
+    diff_string = ""
+    for e in ("years", "months", "days", "hours", "minutes", "seconds"):
+        v = getattr(diff, e)
+        if v > 0:
+            if v == 1:
+                e = e[:-1]
+            diff_string += f"{v} {e} "
+
+    process['Name'] = p.name()
+    process['Command'] = p.cmdline
+    process['Start Time'] = time.strftime("%d %b %Y %H:%M:%S", time.localtime(p.create_time()))
+    process['Uptime'] = diff_string
+
+    return process
+
+
 def get_project(**kwargs):
     project = OrderedDict()
     project["current_dir"] = os.path.realpath(os.curdir)
@@ -307,6 +332,7 @@ handlers = OrderedDict([("host", get_host),
                         ("environ", get_environment),
                         ("python", get_python),
                         ("modules", get_modules),
+                        ("process", get_process),
                         ("project", get_project),
                         ("extra", get_extra),
                         ("checks", get_checks)])

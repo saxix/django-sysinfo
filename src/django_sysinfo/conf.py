@@ -44,6 +44,7 @@ DEFAULTS = {"_ttl": 0,
             "extra": {},
             "checks": {},
             "installed_apps": True,
+            "process": True,
             "environ": True,
             "project": {
                 "mail": True,
