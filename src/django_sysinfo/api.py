@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
+import re
+
 import psutil
 import socket
 import sys
 import tempfile
 from collections import OrderedDict
 
+from django.utils.regex_helper import _lazy_re_compile
 from django.views.debug import SafeExceptionReporterFilter
 from pkg_resources import get_distribution
 
@@ -25,14 +28,31 @@ logger = logging.getLogger(__name__)
 
 UNKNOWN = "unknown"
 
-if hasattr(SafeExceptionReporterFilter, 'cleanse_setting'):
-    cleanse_setting = SafeExceptionReporterFilter().cleanse_setting
-else:
-    def cleanse_setting(key, value):
-        from django.views.debug import HIDDEN_SETTINGS, CLEANSED_SUBSTITUTE
-        if HIDDEN_SETTINGS.search(key):
-            return CLEANSED_SUBSTITUTE
-        return value
+hidden_settings = _lazy_re_compile(config.masked_environment, flags=re.I)
+cleansed_substitute = '********************'
+
+
+def cleanse_setting(key, value):
+    """
+    Cleanse an individual setting key/value of sensitive content. If the
+    value is a dictionary, recursively cleanse the keys in that dictionary.
+    """
+    try:
+        if hidden_settings.search(key):
+            cleansed = f"{cleansed_substitute}{value[-3:]}"
+        elif isinstance(value, dict):
+            cleansed = {k: cleanse_setting(k, v) for k, v in value.items()}
+        elif isinstance(value, list):
+            cleansed = [cleanse_setting('', v) for v in value]
+        elif isinstance(value, tuple):
+            cleansed = tuple([cleanse_setting('', v) for v in value])
+        else:
+            cleansed = value
+    except TypeError:
+        # If the key isn't regex-able, just return as-is.
+        cleansed = value
+
+    return cleansed
 
 
 def _run_database_statement(conn, stm, offset=0):
@@ -259,8 +279,10 @@ def get_extra(config, request=None):
 
 def get_environment(**kwargs):
     ret = {}
+    filter_environment = import_string(config.filter_environment)
     for key, value in os.environ.items():
-        ret[key] = cleanse_setting(key, value)
+        if not filter_environment(key):
+            ret[key] = cleanse_setting(key, value)
     return ret
 
 

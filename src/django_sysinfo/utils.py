@@ -241,28 +241,6 @@ def get_package_version(application_name, app=None):  # noqa
 
     return six.text_type(version)
 
-# def get_all_package_versions():
-#     packages = {}
-#     for module_name, app in sys.modules.items():
-#         # ignore items that look like submodules
-#         if '.' in module_name:
-#             continue
-#
-#         if 'sys' == module_name:
-#             continue
-#
-#         version = get_package_version(module_name, app)
-#
-#         if version is None:
-#             continue
-#
-#         packages[module_name.lower()] = version
-#
-#     packages['sys'] = '{0}.{1}.{2}'.format(*sys.version_info)
-#
-#     return OrderedDict(sorted(packages.items()))
 
 def filter_environment(key):
-    if key in config.masked_environment:
-        return "****"
-    return os.environ['key']
+    return key in config.hidden_environment

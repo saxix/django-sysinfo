@@ -16,7 +16,8 @@ Features
 --------
 
     - dump system informations
-    - check API to add custom checks
+    - admin integration
+    - API to add custom checks
     - simple echo
     - retrieve library version
 

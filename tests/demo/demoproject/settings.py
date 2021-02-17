@@ -23,13 +23,13 @@ DATABASES = {
     "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": ":memory:"},
-    "mysql": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "sysinfo",
-        "HOST": "127.0.0.1",
-        "PORT": "",
-        "USER": "root",
-        "PASSWORD": ""},
+    # "mysql": {
+    #     "ENGINE": "django.db.backends.mysql",
+    #     "NAME": "sysinfo",
+    #     "HOST": "127.0.0.1",
+    #     "PORT": "",
+    #     "USER": "root",
+    #     "PASSWORD": ""},
 }
 
 TIME_ZONE = "Europe/Rome"
