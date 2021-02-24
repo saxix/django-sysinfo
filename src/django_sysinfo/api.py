@@ -198,6 +198,11 @@ def get_device_info(path):
         return {"total": humanize_bytes(info.total),
                 "used": humanize_bytes(info.used),
                 "free": humanize_bytes(info.free)}
+    except TypeError as e:
+        return {"total": "N/A",
+                "used": "N/A",
+                "free": "N/A",
+                }
     except OSError as e:
         return {"ERROR": str(e)}
 
