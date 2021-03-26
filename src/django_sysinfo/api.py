@@ -329,7 +329,7 @@ def get_environment(**kwargs):
     for key, value in os.environ.items():
         if not filter_environment(key):
             ret[key] = cleanse_setting(key, value)
-    return ret
+    return OrderedDict(sorted(ret.items()))
 
 
 handlers = OrderedDict([("host", get_host),
