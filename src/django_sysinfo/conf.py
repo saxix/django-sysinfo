@@ -36,6 +36,7 @@ def merge(a, b, path=None):
 DEFAULTS = {"_ttl": 0,
             "filter_environment": "django_sysinfo.utils.filter_environment",
             "masked_environment": "API|TOKEN|KEY|SECRET|PASS|SIGNATURE|AUTH|_ID|SID",
+            "masker": "django_sysinfo.utils.cleanse_setting",
             "hidden_environment": ["DIRENV_DIFF"],
             "os": True,
             "modules": True,

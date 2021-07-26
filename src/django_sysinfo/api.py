@@ -28,50 +28,6 @@ logger = logging.getLogger(__name__)
 
 UNKNOWN = "unknown"
 
-
-def _lazy_re_compile(regex, flags=0):
-    """Lazily compile a regex with flags."""
-
-    def _compile():
-        # Compile the regex if it was not passed pre-compiled.
-        if isinstance(regex, (str, bytes)):
-            return re.compile(regex, flags)
-        else:
-            assert not flags, (
-                'flags must be empty if regex is passed pre-compiled'
-            )
-            return regex
-
-    return SimpleLazyObject(_compile)
-
-
-hidden_settings = _lazy_re_compile(config.masked_environment, flags=re.I)
-cleansed_substitute = '********************'
-
-
-def cleanse_setting(key, value):
-    """
-    Cleanse an individual setting key/value of sensitive content. If the
-    value is a dictionary, recursively cleanse the keys in that dictionary.
-    """
-    try:
-        if hidden_settings.search(key):
-            cleansed = f"{cleansed_substitute}{value[-3:]}"
-        elif isinstance(value, dict):
-            cleansed = {k: cleanse_setting(k, v) for k, v in value.items()}
-        elif isinstance(value, list):
-            cleansed = [cleanse_setting('', v) for v in value]
-        elif isinstance(value, tuple):
-            cleansed = tuple([cleanse_setting('', v) for v in value])
-        else:
-            cleansed = value
-    except TypeError:
-        # If the key isn't regex-able, just return as-is.
-        cleansed = value
-
-    return cleansed
-
-
 def _run_database_statement(conn, stm, offset=0):
     if not stm:
         return UNKNOWN
@@ -325,10 +281,23 @@ def get_extra(config, request=None):
 
 def get_environment(**kwargs):
     ret = {}
-    filter_environment = import_string(config.filter_environment)
+    if isinstance(config.filter_environment, str):
+        filter_environment = import_string(config.filter_environment)
+    elif callable(config.filter_environment):
+        filter_environment = config.filter_environment
+    else:
+        raise ValueError('Invalid value for "sysinfo.filter_environment"')
+
+    if isinstance(config.masker, str):
+        obfuscator = import_string(config.masker)
+    elif callable(config.masker):
+        obfuscator = config.masker
+    else:
+        raise ValueError('Invalid value for "sysinfo.masker"')
+
     for key, value in os.environ.items():
         if not filter_environment(key):
-            ret[key] = cleanse_setting(key, value)
+            ret[key] = obfuscator(key, value)
     return OrderedDict(sorted(ret.items()))
 
 

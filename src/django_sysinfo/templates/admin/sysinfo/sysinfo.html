@@ -4,11 +4,11 @@
   <link rel="stylesheet" type="text/css" href="{% static "sysinfo/sysinfo.css" %}"/>
 
 {% endblock %}
-{% block userlinks %} -------1
+{% block userlinks %}
     {{ block.super }}
   <a name="top"/>
 {% endblock userlinks %}
-{#{% block breadcrumbs %} -------2#}
+{#{% block breadcrumbs %}#}
 {#  {{ block.super }}#}
 {#{% endblock %}#}
 {% block content_title %}{% if title %}<h1>System Information</h1>{% endif %}{% endblock %}
