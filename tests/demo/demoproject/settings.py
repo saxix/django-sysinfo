@@ -19,7 +19,7 @@ DATABASES = {
         "HOST": "127.0.0.1",
         "PORT": "",
         "USER": "postgres",
-        "PASSWORD": ""},
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "")},
     "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": ":memory:"},
