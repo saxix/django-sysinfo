@@ -8,8 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [36, 37, 38, 39]
-        django-version: [22, 32]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        django-version: [2.2, 3.2]
+    env:
+      DJANGO_VERSION: ${{ matrix.django-version }}
+      PYTHON_VERSION: ${{ matrix.python-version }}
 
     steps:
       - uses: actions/checkout@v2
@@ -23,4 +26,4 @@ jobs:
         run: python -m pip install --upgrade tox
 
       - name: Test with tox
-        run: tox -e py${{matrix.python-version}}-d${{matrix.django-version}}
+        run: tox -e "py${PYTHON_VERSION//.}-d${DJANGO_VERSION//.}"
