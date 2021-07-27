@@ -8,18 +8,20 @@ jobs:
     services:
       postgres:
         image: postgres
-        env:
-          POSTGRES_PASSWORD:
+#        env:
+#          POSTGRES_PASSWORD:
         options: >-
           --health-cmd pg_isready
-          --health-interval 10s
+          --health-interval 20s
           --health-timeout 5s
           --health-retries 5
-          
+
     strategy:
+      fail-fast: true
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
         django-version: [2.2, 3.2]
+
     env:
       DJANGO_VERSION: ${{ matrix.django-version }}
       PYTHON_VERSION: ${{ matrix.python-version }}
