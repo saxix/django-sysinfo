@@ -51,7 +51,7 @@ def http_basic_login(func):
 
 
 def sysinfo(request):
-    KEY = 'sysinfo/info2'
+    KEY = 'sysinfo/info'
     try:
         content = cache.get(KEY)
 

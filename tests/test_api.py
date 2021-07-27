@@ -55,8 +55,14 @@ def test_broken_database(settings, monkeypatch):
         },
 
     }
-    monkeypatch.setattr(connections, "_databases", None)
-    del connections.databases
+
+    # monkeypatch ConnectionHandler
+    if hasattr(connections, 'settings'):
+        monkeypatch.setattr(connections, "_settings", None, raising=False)  # dj>=3.2
+        del connections.settings
+    elif hasattr(connections, 'databases'):
+        monkeypatch.setattr(connections, "_databases", None, raising=False)  # dj<3.2
+        del connections.databases
 
     ret = get_databases()
     assert sorted(ret.keys()) == ["broken", "default"]
