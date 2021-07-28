@@ -10,7 +10,6 @@ jobs:
       PYTHON_VERSION: ${{ matrix.python-version }}
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: sysinfo
-      POSTGRES_HOST: db
 
     services:
       db:
@@ -28,6 +27,9 @@ jobs:
         django-version: [2.2, 3.2]
 
     steps:
+      - env:
+          POSTGRES_HOST: db
+
       - uses: actions/checkout@v2
 
       - name: Set up Python ${{ matrix.python-version }}
