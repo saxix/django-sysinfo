@@ -5,12 +5,16 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DJANGO_VERSION: ${{ matrix.django-version }}
+      PYTHON_VERSION: ${{ matrix.python-version }}
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sysinfo
+      POSTGRES_HOST: db
+
     services:
-      postgres:
+      db:
         image: postgres
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: sysinfo
         options: >-
           --health-cmd pg_isready
           --health-interval 20s
@@ -22,10 +26,6 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
         django-version: [2.2, 3.2]
-
-    env:
-      DJANGO_VERSION: ${{ matrix.django-version }}
-      PYTHON_VERSION: ${{ matrix.python-version }}
 
     steps:
       - uses: actions/checkout@v2
