@@ -51,7 +51,7 @@ def http_basic_login(func):
 
 
 def sysinfo(request):
-    KEY = 'sysinfo/info2'
+    KEY = 'sysinfo/info'
     try:
         content = cache.get(KEY)
 
@@ -67,7 +67,7 @@ def sysinfo(request):
         return response
     except Exception as e:  # pragma: no cover
         logger.exception(e)
-        return JsonResponse({"Error": str(e)}, status=400)
+        return JsonResponse({f"Error {e.__class__.__name__}": str(e)}, status=400)
 
 
 def version(request, name):

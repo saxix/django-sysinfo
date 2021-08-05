@@ -1,8 +1,0 @@
-django
-ipython<6.0
-pip
-psycopg2
-check-manifest
-twine
-wheel
-

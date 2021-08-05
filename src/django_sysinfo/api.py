@@ -190,7 +190,7 @@ def get_process(**kwargs):
             diff_string += f"{v} {e} "
 
     process['Name'] = p.name()
-    process['Command'] = p.cmdline
+    process['Command'] = p.cmdline()
     process['Start Time'] = time.strftime("%d %b %Y %H:%M:%S", time.localtime(p.create_time()))
     process['Uptime'] = diff_string
 

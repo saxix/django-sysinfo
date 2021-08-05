@@ -16,10 +16,11 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "sysinfo",
-        "HOST": "127.0.0.1",
+        "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
         "PORT": "",
-        "USER": "postgres",
-        "PASSWORD": ""},
+        "USER":os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "")
+    },
     "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": ":memory:"},
