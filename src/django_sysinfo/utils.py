@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-import os
+import re
 
 import pkg_resources
 import psutil
@@ -9,6 +9,7 @@ from collections import defaultdict
 from itertools import chain
 
 import six
+from django.utils.functional import SimpleLazyObject
 
 from django_sysinfo.conf import config
 
@@ -242,5 +243,48 @@ def get_package_version(application_name, app=None):  # noqa
     return six.text_type(version)
 
 
+def _lazy_re_compile(regex, flags=0):
+    """Lazily compile a regex with flags."""
+
+    def _compile():
+        # Compile the regex if it was not passed pre-compiled.
+        if isinstance(regex, (str, bytes)):
+            return re.compile(regex, flags)
+        else:
+            assert not flags, (
+                'flags must be empty if regex is passed pre-compiled'
+            )
+            return regex
+
+    return SimpleLazyObject(_compile)
+
+
 def filter_environment(key):
     return key in config.hidden_environment
+
+
+masked_settings = _lazy_re_compile(config.masked_environment, flags=re.I)
+cleansed_substitute = '********************'
+
+
+def cleanse_setting(key, value):
+    """
+    Cleanse an individual setting key/value of sensitive content. If the
+    value is a dictionary, recursively cleanse the keys in that dictionary.
+    """
+    try:
+        if masked_settings.search(key):
+            cleansed = f"{cleansed_substitute}{value[-3:]}"
+        elif isinstance(value, dict):
+            cleansed = {k: cleanse_setting(k, v) for k, v in value.items()}
+        elif isinstance(value, list):
+            cleansed = [cleanse_setting('', v) for v in value]
+        elif isinstance(value, tuple):
+            cleansed = tuple([cleanse_setting('', v) for v in value])
+        else:
+            cleansed = value
+    except TypeError:
+        # If the key isn't regex-able, just return as-is.
+        cleansed = value
+
+    return cleansed

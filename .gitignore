@@ -7,3 +7,4 @@ poetry.lock
 manage.py
 !.appveyor.yml
 !.coveralla.yml
+!.github

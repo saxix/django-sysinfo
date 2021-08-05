@@ -51,7 +51,7 @@ def http_basic_login(func):
 
 
 def sysinfo(request):
-    KEY = 'sysinfo/info2'
+    KEY = 'sysinfo/info'
     try:
         content = cache.get(KEY)
 
@@ -67,7 +67,7 @@ def sysinfo(request):
         return response
     except Exception as e:  # pragma: no cover
         logger.exception(e)
-        return JsonResponse({"Error": str(e)}, status=400)
+        return JsonResponse({f"Error {e.__class__.__name__}": str(e)}, status=400)
 
 
 def version(request, name):
@@ -98,7 +98,14 @@ def admin_sysinfo(request):
     infos = get_sysinfo(request)
     infos.setdefault('extra', {})
     infos.setdefault('checks', {})
+    from django.contrib.admin import site
     context = {'title': 'sysinfo',
-               'infos': infos
+               'infos': infos,
+               'site_title': site.site_title,
+               'site_header': site.site_header,
+               'enable_switch': True,
+               'has_permission': True,
+               'user': request.user,
+
                }
     return render(request, 'admin/sysinfo/sysinfo.html', context)
