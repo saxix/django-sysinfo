@@ -4,6 +4,23 @@
 History
 =======
 
+2.5
+-----------------
+* minor fixes an
+
+2.4
+-----------------
+* improves error messages
+
+2.3
+-----------------
+* new Process section
+
+2.2
+-----------------
+* support django 3.1
+
+
 2.0 (11 Oct 2020)
 -----------------
 * drop support Python 2.x
