@@ -4,6 +4,10 @@
 History
 =======
 
+2.5.1
+-----------------
+* fixes requirements
+
 2.5
 -----------------
 * minor fixes an
