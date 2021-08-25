@@ -2,12 +2,9 @@
 {% block extrahead %}
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{% static "sysinfo/sysinfo.css" %}"/>
-
+  <a name="top"></a>
 {% endblock %}
-{% block userlinks %}
-    {{ block.super }}
-  <a name="top"/>
-{% endblock userlinks %}
+{% block userlinks %}{{ block.super }}{% endblock userlinks %}
 {#{% block breadcrumbs %}#}
 {#  {{ block.super }}#}
 {#{% endblock %}#}
@@ -16,14 +13,6 @@
 {% block content %}
   <input id="filterInput" type="text">
   <div>
-{#    <a href="#process">Process</a>#}
-{#    - <a href="#project">Project</a>#}
-{#    - <a href="#python">Python</a>#}
-{#    - <a href="#os">OS</a>#}
-{#    - <a href="#environ">Environment</a>#}
-{#    - <a href="#modules">Modules</a>#}
-{#    - <a href="#host">Host</a>#}
-{#    - <a href="#extra">Extras</a>#}
     {% url "sys-info" as json %}
     {% if json %}
       <span style="float:right"><a href="{{ json }}">view json</a></span>
