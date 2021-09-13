@@ -3,6 +3,10 @@
 =======
 History
 =======
+2.6.0
+-----------------
+* pass request and config to cleanse_setting and filter_environment
+
 
 2.6 (in development)
 -----------------
