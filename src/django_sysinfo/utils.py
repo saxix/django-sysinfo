@@ -259,7 +259,7 @@ def _lazy_re_compile(regex, flags=0):
     return SimpleLazyObject(_compile)
 
 
-def filter_environment(key):
+def filter_environment(key, config, request):
     return key in config.hidden_environment
 
 
@@ -267,7 +267,7 @@ masked_settings = _lazy_re_compile(config.masked_environment, flags=re.I)
 cleansed_substitute = '********************'
 
 
-def cleanse_setting(key, value):
+def cleanse_setting(key, value, config, request):
     """
     Cleanse an individual setting key/value of sensitive content. If the
     value is a dictionary, recursively cleanse the keys in that dictionary.
