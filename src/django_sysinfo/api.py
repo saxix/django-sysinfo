@@ -276,7 +276,7 @@ def get_extra(config, request=None):
     return extras
 
 
-def get_environment(**kwargs):
+def get_environment(config=None, request=None):
     ret = {}
     if isinstance(config.filter_environment, str):
         filter_environment = import_string(config.filter_environment)
@@ -293,8 +293,8 @@ def get_environment(**kwargs):
         raise ValueError('Invalid value for "sysinfo.masker"')
 
     for key, value in os.environ.items():
-        if not filter_environment(key):
-            ret[key] = obfuscator(key, value)
+        if not filter_environment(key, config=config, request=request):
+            ret[key] = obfuscator(key, value, config=config, request=request)
     return OrderedDict(sorted(ret.items()))
 
 
