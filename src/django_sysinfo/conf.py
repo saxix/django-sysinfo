@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.conf import settings
 
 
@@ -56,7 +55,7 @@ DEFAULTS = {"_ttl": 0,
             }
 
 
-class Config(object):
+class Config:
     """
     >>> c = Config({"os": False})
     >>> c.os, c.python, c.project['mail'], c.MEDIA_ROOT

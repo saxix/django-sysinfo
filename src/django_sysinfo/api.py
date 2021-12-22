@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import psutil
 from pkg_resources import get_distribution
 
