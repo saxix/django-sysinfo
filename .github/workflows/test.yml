@@ -1,45 +1,67 @@
-name: PyTest
+name: Test
 
-on: [push]
+on:
+    push:
+        branches:
+            - master
+            - develop
+    pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      DJANGO_VERSION: ${{ matrix.django-version }}
-      PYTHON_VERSION: ${{ matrix.python-version }}
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: sysinfo
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v2
+            -   uses: actions/setup-python@v2
 
-    services:
-      db:
-        image: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 20s
-          --health-timeout 5s
-          --health-retries 5
+            -   name: Install dependencies
+                run: |
+                    python -m pip install --upgrade pip flake8 isort
+            -   name: Lint with flake8
+                run: |
+                    flake8 src
+                    isort -c src
+    test:
+        #        if: ${{github.event}} && ${{ !contains(github.event.head_commit.message, 'ci skip') }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                python-version: [ "3.9", "3.10" ]
+                django-version: [ "3.2", "4.0" ]
+        env:
+            PY_VER: ${{ matrix.python-version}}
+            DJ_VER: ${{ matrix.django-version}}
 
-    strategy:
-      fail-fast: true
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
-        django-version: [2.2, 3.2]
+        services:
+          postgres:
+            image: postgres
+            env:
+              POSTGRES_USER: postgres
+              POSTGRES_PASSWORD: postgres
+              POSTGRES_DB: sysinfo
+            ports:
+              - 5432:5432
+            options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-    steps:
-      - env:
-          POSTGRES_HOST: db
+        steps:
+            -   uses: actions/checkout@v2
 
-      - uses: actions/checkout@v2
+            -   name: Set up Python ${{ matrix.python-version }}
+                uses: actions/setup-python@v2
+                with:
+                    python-version: ${{ matrix.python-version }}
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
+            -   name: Install tox
+                run: python -m pip install --upgrade pip tox
 
-      - name: Install dependencies
-        run: python -m pip install --upgrade tox
+            -   name: Test with
+                run: tox -e "py${PY_VER//.}-d${DJ_VER//.}"
 
-      - name: Test with tox
-        run: tox -e "py${PYTHON_VERSION//.}-d${DJANGO_VERSION//.}"
+            -   uses: codecov/codecov-action@v1
+                with:
+#                    files: ./coverage1.xml,./coverage2.xml # optional
+#                    flags: unittests # optional
+#                    name: codecov-umbrella # optional
+#                    fail_ci_if_error: true # optional (default = false)
+                    verbose: true # optional (default = false)

@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-import codecs
-import logging
-from functools import wraps
-
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.cache import cache
@@ -11,6 +7,10 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.cache import patch_cache_control
 from django.views.decorators.cache import never_cache
+
+import codecs
+import logging
+from functools import wraps
 
 from django_sysinfo.conf import config
 

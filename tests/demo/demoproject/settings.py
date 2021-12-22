@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function, unicode_literals
-
 import os
-
-import django
 
 here = os.path.dirname(__file__)
 # sys.path.append(os.path.abspath(os.path.join(here, os.pardir)))
@@ -18,8 +13,8 @@ DATABASES = {
         "NAME": "sysinfo",
         "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
         "PORT": "",
-        "USER":os.getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "")
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres")
     },
     "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",
