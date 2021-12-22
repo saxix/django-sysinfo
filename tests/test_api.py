@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.db import connections
 
 import logging
@@ -15,7 +14,6 @@ def test_database():
     ret = get_databases()
     assert ret['default']['engine'] == 'django.db.backends.postgresql_psycopg2'
     assert ret['sqlite']['engine'] == 'django.db.backends.sqlite3'
-    # assert ret['mysql']['engine'] == 'django.db.backends.mysql'
 
 
 @pytest.mark.django_db

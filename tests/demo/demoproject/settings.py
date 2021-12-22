@@ -1,11 +1,8 @@
 import os
 
 here = os.path.dirname(__file__)
-# sys.path.append(os.path.abspath(os.path.join(here, os.pardir)))
-# sys.path.append(os.path.abspath(os.path.join(here, os.pardir, "demo")))
 
 DEBUG = True
-# TEMPLATE_DEBUG = DEBUG
 
 DATABASES = {
     "default": {
@@ -29,7 +26,6 @@ DATABASES = {
 }
 
 TIME_ZONE = "Europe/Rome"
-# LANGUAGE_CODE = "en-us"
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
@@ -164,15 +160,3 @@ SYSINFO = {"host": True,
            "checks": None,
            "extra": None
            }
-
-# ENABLE_SELENIUM = True
-#
-# DATE_FORMAT = "d-m-Y"
-# TIME_FORMAT = "H:i"
-# DATETIME_FORMAT = "d-m-Y H:i"
-# YEAR_MONTH_FORMAT = "F Y"
-# MONTH_DAY_FORMAT = "F j"
-# SHORT_DATE_FORMAT = "m/d/Y"
-# SHORT_DATETIME_FORMAT = "m/d/Y P"
-# FIRST_DAY_OF_WEEK = 1
-#

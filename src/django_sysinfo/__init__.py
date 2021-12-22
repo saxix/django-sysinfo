@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 NAME = "django-sysinfo"
-VERSION = __version__ = "2.5.1"
+VERSION = __version__ = "2.6"
 __author__ = "sax"
