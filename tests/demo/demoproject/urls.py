@@ -1,9 +1,9 @@
-from django.urls import path
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.core.signals import request_started
 from django.db import IntegrityError
 from django.dispatch import receiver
+from django.urls import path
 
 from django_sysinfo.views import (
     admin_sysinfo, check, echo, http_basic_login, sysinfo, version

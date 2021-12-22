@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-import logging
-import re
-
 import pkg_resources
 import psutil
+
+from django.utils.functional import SimpleLazyObject
+
+import logging
+import re
+import six
 import socket
 from collections import defaultdict
 from itertools import chain
-
-import six
-from django.utils.functional import SimpleLazyObject
 
 from django_sysinfo.conf import config
 
