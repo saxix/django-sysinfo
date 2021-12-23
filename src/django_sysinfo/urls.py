@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.urls import path
 
 from django_sysinfo.views import check, echo, http_basic_login, sysinfo, version

@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function, unicode_literals
+from django.core.exceptions import PermissionDenied
 
 import json
 import logging
-
-from django.core.exceptions import PermissionDenied
-
 import pytest
 
 from django_sysinfo.api import UNKNOWN

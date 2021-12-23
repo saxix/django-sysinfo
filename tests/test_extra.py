@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function, unicode_literals
-
 import json
 import logging
-
 import pytest
 from demoproject.models import test_sysinfo
 

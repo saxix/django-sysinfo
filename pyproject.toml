@@ -9,7 +9,7 @@ repository = "https://github.com/saxix/django-sysinfo"
 homepage = "https://github.com/saxix/django-sysinfo"
 
 [tool.poetry.dependencies]
-python  = "^3.6"
+python  = "^3.9"
 pytz = "*"
 psutil = "*"
 python-dateutil = "*"

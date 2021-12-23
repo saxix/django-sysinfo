@@ -1,23 +1,19 @@
-# -*- coding: utf-8 -*-
-from datetime import datetime
-
 import psutil
 from pkg_resources import get_distribution
 
 from django.conf import settings
 from django.db import connections
-from django.utils.functional import SimpleLazyObject
 from django.utils.module_loading import import_string
 
 import logging
 import os
-import re
 import six
 import socket
 import sys
 import tempfile
 import time
 from collections import OrderedDict
+from datetime import datetime
 
 from django_sysinfo.compat import get_installed_apps, get_installed_distributions
 from django_sysinfo.utils import get_network, humanize_bytes
@@ -27,6 +23,7 @@ from .conf import config
 logger = logging.getLogger(__name__)
 
 UNKNOWN = "unknown"
+
 
 def _run_database_statement(conn, stm, offset=0):
     if not stm:
@@ -154,7 +151,7 @@ def get_device_info(path):
         return {"total": humanize_bytes(info.total),
                 "used": humanize_bytes(info.used),
                 "free": humanize_bytes(info.free)}
-    except TypeError as e:
+    except TypeError:
         return {"total": "N/A",
                 "used": "N/A",
                 "free": "N/A",
@@ -279,7 +276,7 @@ def get_extra(config, request=None):
     return extras
 
 
-def get_environment(**kwargs):
+def get_environment(config=None, request=None):
     ret = {}
     if isinstance(config.filter_environment, str):
         filter_environment = import_string(config.filter_environment)
@@ -296,8 +293,8 @@ def get_environment(**kwargs):
         raise ValueError('Invalid value for "sysinfo.masker"')
 
     for key, value in os.environ.items():
-        if not filter_environment(key):
-            ret[key] = obfuscator(key, value)
+        if not filter_environment(key, config=config, request=request):
+            ret[key] = obfuscator(key, value, config=config, request=request)
     return OrderedDict(sorted(ret.items()))
 
 

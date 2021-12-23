@@ -1,7 +1,6 @@
 import logging
-import warnings
-
 import pytest
+import warnings
 
 levelNames = {
     logging.CRITICAL: "CRITICAL",

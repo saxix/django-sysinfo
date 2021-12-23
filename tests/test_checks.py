@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 import json
 import logging
-
 import pytest
 
 from django_sysinfo.api import get_checks, run_check

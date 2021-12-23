@@ -4,6 +4,10 @@
 History
 =======
 
+2.6 (in development)
+-----------------
+* support django 4.0
+
 2.5.1
 -----------------
 * fixes requirements
