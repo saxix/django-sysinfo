@@ -139,8 +139,8 @@ def get_mail(**kwargs):
     p = OrderedDict()
     p["backend"] = settings.EMAIL_BACKEND
     p["host"] = "{0}:{1}".format(settings.EMAIL_HOST, settings.EMAIL_PORT)
-    p["tls"] = getattr(settings, "USE_TLS", False)
-    p["ssl"] = getattr(settings, "USE_SSL", False)
+    p["tls"] = getattr(settings, "EMAIL_USE_TLS", False)
+    p["ssl"] = getattr(settings, "EMAIL_USE_SSL", False)
     p["status"] = check()
     return p
 
