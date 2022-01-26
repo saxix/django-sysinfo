@@ -3,6 +3,10 @@
 =======
 History
 =======
+2.6.1
+-----------------
+* fixes EMAIL_USE_SSL/EMAIL_USE_TLS display info
+
 2.6.0
 -----------------
 * pass request and config to cleanse_setting and filter_environment
