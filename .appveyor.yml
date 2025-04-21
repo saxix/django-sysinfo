@@ -48,4 +48,3 @@ after_test:
 
 artifacts:
   - path: dist\*
-

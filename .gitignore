@@ -3,8 +3,6 @@
 dist/
 *.py[cod]
 __pycache__
-poetry.lock
 manage.py
-!.appveyor.yml
-!.coveralla.yml
 !.github
+src/django_sysinfo/version.py

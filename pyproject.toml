@@ -1,31 +1,76 @@
-[tool.poetry]
+[build-system]
+build-backend = "hatchling.build"
+requires = [
+  "hatch-vcs>=0.4",
+  "hatchling>=1.25",
+]
+
+[project]
 name = "django-sysinfo"
-version = "2.7.0"
 description = "Simple django app to expose system infos: libraries version, databae server infos..."
-authors = ["sax <s.apostolico@gmail.com>"]
+readme = "README.md"
 license = "MIT"
-readme = "README.rst"
+authors = [
+  { name = "sax", email = "s.apostolico@gmail.com" },
+]
+requires-python = ">=3.10"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Web Environment",
+  "Framework :: Django :: 3.2",
+  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.2",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries :: Application Frameworks",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dynamic = [ "version" ]
+dependencies = [
+  "psutil>=7",
+  "python-dateutil>=2.9.0.post0",
+]
+
 repository = "https://github.com/saxix/django-sysinfo"
 homepage = "https://github.com/saxix/django-sysinfo"
 
-[tool.poetry.dependencies]
-python  = "^3.9"
-pytz = "*"
-psutil = "*"
-python-dateutil = "*"
+[dependency-groups]
+dev = [
+  "django-webtest>=1.9.13",
+  "mock-import>=0.0.3",
+  "pre-commit>=4.2",
+  "psycopg2>=2.9.10",
+  "pytest>=8.3.5",
+  "pytest-cov>=6.1.1",
+  "pytest-django>=4.11.1",
+  "pytest-echo>=2",
+  "ruff>=0.11.6",
+]
+dj5 = [
+  "django==5.2.*",
+]
 
-[tool.poetry.dev-dependencies]
-tox = "^3.20.1"
-pytest = "^6.1.1"
-pytest-echo = "^1.7.1"
-django-webtest = "^1.9.7"
-pytest-pythonpath = "^0.7.3"
-isort = "^5.6.3"
-pytest-cov = "^2.10.1"
-pytest-django = "^3.10.0"
-psycopg2-binary = "^2.8.6"
-mock_import = "^0.0.3"
+[tool.distutils.bdist_wheel]
+universal = 1
 
-[build-system]
-requires = ["poetry>=1.1"]
-build-backend = "poetry.masonry.api"
+[tool.hatch]
+build.hooks.vcs.version-file = "src/django_sysinfo/version.py"
+version.source = "vcs"
+raw-options = { root = "../.." }
+
+[tool.hatch.build.targets.sdist]
+ignore-vcs = true
+include = [
+  "src/django_sysinfo/**/*.*",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = [ "src/django_sysinfo" ]
