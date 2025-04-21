@@ -1,5 +1,7 @@
+
+
 import psutil
-from pkg_resources import get_distribution
+from importlib import metadata
 
 from django.conf import settings
 from django.db import connections
@@ -15,7 +17,7 @@ import time
 from collections import OrderedDict
 from datetime import datetime
 
-from django_sysinfo.compat import get_installed_apps, get_installed_distributions
+from django_sysinfo.compat import get_installed_apps
 from django_sysinfo.utils import get_network, humanize_bytes
 
 from .conf import config
@@ -90,11 +92,19 @@ def get_databases(**kwargs):
 
 
 def get_modules(**kwargs):
-    modules = OrderedDict()
-    for i in sorted(get_installed_distributions(),
-                    key=lambda i: i.project_name.lower()):
-        modules[i.project_name.lower()] = i.version
-    return modules
+    if sys.version_info[0:2] >= (3, 12):
+        from importlib.metadata import distributions
+        return OrderedDict(
+            {d.name: d.version for d in distributions()}
+        )
+    else:
+        import pkg_resources
+        modules = OrderedDict()
+        installed_distributions = [d for d in pkg_resources.working_set]
+        for i in sorted(installed_distributions,
+                        key=lambda i: i.project_name.lower()):
+            modules[i.project_name.lower()] = i.version
+        return modules
 
 
 def get_host(**kwargs):
@@ -328,7 +338,7 @@ def get_sysinfo(request):
 
 def get_version(name):
     try:
-        version = get_distribution(name).version
+        version = metadata.version(name)
     except Exception:
         version = UNKNOWN
     return version

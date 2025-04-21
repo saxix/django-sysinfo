@@ -3,6 +3,10 @@
 =======
 History
 =======
+2.7.0
+-----------------
+* Added Python 3.12 and Django 5 compatibility
+
 2.6.1
 -----------------
 * fixes EMAIL_USE_SSL/EMAIL_USE_TLS display info
