@@ -1,3 +1,5 @@
+from importlib import metadata
+
 import psutil
 
 from django.utils.functional import SimpleLazyObject
@@ -202,7 +204,7 @@ def get_package_version(application_name, app=None):  # noqa
     parts = application_name.split('.')
     module_name = parts[0]
     try:
-        return pkg_resources.get_distribution(module_name).version
+        return metadata.version(module_name)
     except Exception:
         pass
     # if app is None:

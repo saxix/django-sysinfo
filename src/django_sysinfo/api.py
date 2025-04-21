@@ -106,6 +106,7 @@ def get_modules(**kwargs):
             modules[i.project_name.lower()] = i.version
         return modules
 
+
 def get_host(**kwargs):
     mem = psutil.virtual_memory()
     host = OrderedDict()
