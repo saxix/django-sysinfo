@@ -1,4 +1,3 @@
-import pkg_resources
 import psutil
 
 from django.utils.functional import SimpleLazyObject
@@ -154,11 +153,6 @@ def get_ips():
 
 def get_package_version(application_name, app=None):  # noqa
     """
-    # >>> get_package_version('django_sysinfo') == django_sysinfo.__version__
-    # True
-    # >>> with mock.patch('pkg_resources.get_distribution', None):
-    # ...     get_package_version('django_sysinfo') == django_sysinfo.__version__
-    # True
 
     :param application_name:
     :param app:
