@@ -53,6 +53,7 @@ dev = [
   "pytest-django>=4.11.1",
   "pytest-echo>=2",
   "ruff>=0.11.6",
+  "tox>=4.25",
 ]
 dj5 = [
   "django==5.2.*",
