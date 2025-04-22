@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+from .version import __version__
+
 NAME = "django-sysinfo"
-VERSION = __version__ = "2.7.0"
 __author__ = "sax"
+
+VERSION = __version__

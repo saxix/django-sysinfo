@@ -1,8 +1,8 @@
-from django.core.exceptions import PermissionDenied
-
 import json
 import logging
+
 import pytest
+from django.core.exceptions import PermissionDenied
 
 from django_sysinfo.api import UNKNOWN
 from django_sysinfo.compat import reverse
@@ -43,7 +43,7 @@ def test_echo(client, cache):
 
 @pytest.mark.django_db
 # @pytest.mark.urls("urls")
-def test_sysinfo_limit_Sections(client, cache):
+def test_sysinfo_limit_sections(client, cache):
     response = client.get("%s?s=os,host" % reverse("sys-info"))
     data = json.loads(response.content.decode("utf8"))
 
@@ -53,6 +53,7 @@ def test_sysinfo_limit_Sections(client, cache):
 @pytest.mark.django_db
 def test_http_basic(rf, user, monkeypatch, settings):
     import base64
+
     settings.SYSINFO_USERS = [user.username]
 
     monkeypatch.setattr("django.contrib.auth.login", lambda r, u: True)

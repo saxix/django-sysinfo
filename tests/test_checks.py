@@ -1,5 +1,6 @@
 import json
 import logging
+
 import pytest
 
 from django_sysinfo.api import get_checks, run_check
@@ -16,19 +17,25 @@ def test_base(monkeypatch):
 
 
 def test_all(monkeypatch):
-    monkeypatch.setattr(config, "checks", {"a": lambda x: (True, 200),
-                                           "b": "func",
-                                           "c": "demoproject.models.test_check",
-                                           "d": lambda x: 1.0 / 0.0,
-                                           "e": 200,
-                                           })
+    monkeypatch.setattr(
+        config,
+        "checks",
+        {
+            "a": lambda x: (True, 200),
+            "b": "func",
+            "c": "demoproject.models.test_check",
+            "d": lambda x: 1.0 / 0.0,
+            "e": 200,
+        },
+    )
     ret = get_checks()
-    assert ret == {"a": (True, 200),
-                   "b": ("ERROR", 500),
-                   "c": (True, 200),
-                   "d": ("ERROR", 500),
-                   "e": (200, 200),
-                   }, ret
+    assert ret == {
+        "a": (True, 200),
+        "b": ("ERROR", 500),
+        "c": (True, 200),
+        "d": ("ERROR", 500),
+        "e": (200, 200),
+    }, ret
 
 
 def test_chack_by_name(monkeypatch):
@@ -67,9 +74,14 @@ def test_single_check(client, monkeypatch):
 @pytest.mark.django_db
 # @pytest.mark.urls("urls")
 def test_checks(client, monkeypatch):
-    monkeypatch.setattr(config, "checks", {"a": lambda x: (True, 200),
-                                           "b": lambda x: (False, 500),
-                                           })
+    monkeypatch.setattr(
+        config,
+        "checks",
+        {
+            "a": lambda x: (True, 200),
+            "b": lambda x: (False, 500),
+        },
+    )
     response = client.get(reverse("sys-check", args=["a"]))
     data = json.loads(response.content.decode("utf8"))
     assert data == {"message": True}

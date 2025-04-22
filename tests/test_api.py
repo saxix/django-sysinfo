@@ -1,8 +1,8 @@
-from django.db import connections
-
 import logging
-import pytest
 from collections import OrderedDict
+
+import pytest
+from django.db import connections
 
 from django_sysinfo.api import get_databases, get_mail
 
@@ -12,50 +12,51 @@ logger = logging.getLogger(__name__)
 @pytest.mark.django_db
 def test_database():
     ret = get_databases()
-    assert ret['default']['engine'] == 'django.db.backends.postgresql_psycopg2'
-    assert ret['sqlite']['engine'] == 'django.db.backends.sqlite3'
+    assert ret["default"]["engine"] == "django.db.backends.postgresql_psycopg2"
+    assert ret["sqlite"]["engine"] == "django.db.backends.sqlite3"
 
 
 @pytest.mark.django_db
 def test_mail():
     ret = get_mail()
-    assert ret == OrderedDict([("backend", "django.core.mail.backends.locmem.EmailBackend"),
-                               ("host", "localhost:25"),
-                               ("tls", False), ("ssl", False),
-                               ("status", "OK")]), ret
+    assert ret == OrderedDict(
+        [
+            ("backend", "django.core.mail.backends.locmem.EmailBackend"),
+            ("host", "localhost:25"),
+            ("tls", False),
+            ("ssl", False),
+            ("status", "OK"),
+        ]
+    ), ret
 
 
 @pytest.mark.django_db
 def test_mail_broken(settings):
     settings.EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     ret = get_mail()
-    assert ret["status"] in ("[Errno 61] Connection refused",
-                             "[Errno 111] Connection refused"), ret
+    assert ret["status"] in ("[Errno 61] Connection refused", "[Errno 111] Connection refused"), ret
 
 
 @pytest.mark.django_db
-@pytest.mark.filterwarnings('ignore:Overriding setting DATABASES')
+@pytest.mark.filterwarnings("ignore:Overriding setting DATABASES")
 def test_broken_database(settings, monkeypatch):
     settings.DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": ":memory:"},
+        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"},
         "broken": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
             "NAME": "not-existent-db",
             "HOST": "127.0.0.1",
             "PORT": "21",
             "USER": "",
-            "PASSWORD": ""
+            "PASSWORD": "",
         },
-
     }
 
     # monkeypatch ConnectionHandler
-    if hasattr(connections, 'settings'):
+    if hasattr(connections, "settings"):
         monkeypatch.setattr(connections, "_settings", None, raising=False)  # dj>=3.2
         del connections.settings
-    elif hasattr(connections, 'databases'):
+    elif hasattr(connections, "databases"):
         monkeypatch.setattr(connections, "_databases", None, raising=False)  # dj<3.2
         del connections.databases
 

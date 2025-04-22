@@ -1,21 +1,17 @@
-
-
-import psutil
-from importlib import metadata
-
-from django.conf import settings
-from django.db import connections
-from django.utils.module_loading import import_string
-
 import logging
 import os
-import six
 import socket
 import sys
 import tempfile
 import time
 from collections import OrderedDict
 from datetime import datetime
+from importlib import metadata
+
+import psutil
+from django.conf import settings
+from django.db import connections
+from django.utils.module_loading import import_string
 
 from django_sysinfo.compat import get_installed_apps
 from django_sysinfo.utils import get_network, humanize_bytes
@@ -43,8 +39,6 @@ def _get_database_infos(conn):
     if engine == "django.db.backends.mysql":
         ret["version"] = _run_database_statement(conn, "SELECT VERSION();")
         ret["user"] = _run_database_statement(conn, "SELECT USER();")
-        # ret["basedir"] = _run_database_statement(conn, "SHOW VARIABLES LIKE '%BASEDIR%';", 1)
-        # ret["max_connections"] = _run_database_statement(conn, "SHOW VARIABLES LIKE '%MAX_CONNECTIONS%';", 1)
     elif engine == "django.db.backends.postgresql_psycopg2":
         import psycopg2.extensions
 
@@ -53,11 +47,13 @@ def _get_database_infos(conn):
         ret["collate"] = _run_database_statement(conn, "SHOW LC_COLLATE;")
         ret["ctype"] = _run_database_statement(conn, "SHOW LC_CTYPE;")
         isolation_level = conn.isolation_level
-        for attr in ["ISOLATION_LEVEL_AUTOCOMMIT",
-                     "ISOLATION_LEVEL_READ_UNCOMMITTED",
-                     "ISOLATION_LEVEL_READ_COMMITTED",
-                     "ISOLATION_LEVEL_REPEATABLE_READ",
-                     "ISOLATION_LEVEL_SERIALIZABLE"]:
+        for attr in [
+            "ISOLATION_LEVEL_AUTOCOMMIT",
+            "ISOLATION_LEVEL_READ_UNCOMMITTED",
+            "ISOLATION_LEVEL_READ_COMMITTED",
+            "ISOLATION_LEVEL_REPEATABLE_READ",
+            "ISOLATION_LEVEL_SERIALIZABLE",
+        ]:
             if conn.isolation_level == getattr(psycopg2.extensions, attr, None):
                 isolation_level = attr
 
@@ -70,7 +66,7 @@ def _get_database_infos(conn):
     elif engine == "django.db.backends.oracle":
         ret["version"] = _run_database_statement(conn, "select * from $version;")
     else:
-        ret["info"] = 'DATABASE NOT SUPPORTED'
+        ret["info"] = "DATABASE NOT SUPPORTED"
     return ret
 
 
@@ -94,15 +90,14 @@ def get_databases(**kwargs):
 def get_modules(**kwargs):
     if sys.version_info[0:2] >= (3, 12):
         from importlib.metadata import distributions
-        return OrderedDict(
-            {d.name: d.version for d in distributions()}
-        )
-    else:
+
+        return OrderedDict({d.name: d.version for d in distributions()})
+    else:  # noqa: RET505
         import pkg_resources
+
         modules = OrderedDict()
-        installed_distributions = [d for d in pkg_resources.working_set]
-        for i in sorted(installed_distributions,
-                        key=lambda i: i.project_name.lower()):
+        installed_distributions = list(pkg_resources.working_set)
+        for i in sorted(installed_distributions, key=lambda i: i.project_name.lower()):
             modules[i.project_name.lower()] = i.version
         return modules
 
@@ -115,28 +110,30 @@ def get_host(**kwargs):
     host["cpus"] = psutil.cpu_count()
     host["network"] = get_network()
 
-    host["memory"] = {"total": humanize_bytes(mem.total),
-                      "available": humanize_bytes(mem.available),
-                      "percent": humanize_bytes(mem.percent),
-                      "used": humanize_bytes(mem.used),
-                      "free": humanize_bytes(mem.free)}
+    host["memory"] = {
+        "total": humanize_bytes(mem.total),
+        "available": humanize_bytes(mem.available),
+        "percent": humanize_bytes(mem.percent),
+        "used": humanize_bytes(mem.used),
+        "free": humanize_bytes(mem.free),
+    }
     return host
 
 
 def get_python(**kwargs):
     p = OrderedDict()
     p["executable"] = sys.executable
-    p["version"] = "{0.major}.{0.minor}.{0.micro}".format(sys.version_info)
+    p["version"] = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
     p["platform"] = sys.platform
     p["info"] = sys.version
-    p["maxunicode"] = (sys.maxunicode,
-                       {True: "OK", False: "WARN"}[sys.maxunicode > 0xffff])
+    p["maxunicode"] = (sys.maxunicode, {True: "OK", False: "WARN"}[sys.maxunicode > 0xFFFF])
     return p
 
 
 def get_mail(**kwargs):
     def check():
         from django.core.mail import get_connection
+
         try:
             conn = get_connection(fail_silently=False)
             conn.open()
@@ -148,7 +145,7 @@ def get_mail(**kwargs):
 
     p = OrderedDict()
     p["backend"] = settings.EMAIL_BACKEND
-    p["host"] = "{0}:{1}".format(settings.EMAIL_HOST, settings.EMAIL_PORT)
+    p["host"] = f"{settings.EMAIL_HOST}:{settings.EMAIL_PORT}"
     p["tls"] = getattr(settings, "EMAIL_USE_TLS", False)
     p["ssl"] = getattr(settings, "EMAIL_USE_SSL", False)
     p["status"] = check()
@@ -158,21 +155,25 @@ def get_mail(**kwargs):
 def get_device_info(path):
     try:
         info = psutil.disk_usage(os.path.realpath(path))
-        return {"total": humanize_bytes(info.total),
-                "used": humanize_bytes(info.used),
-                "free": humanize_bytes(info.free)}
+        return {
+            "total": humanize_bytes(info.total),
+            "used": humanize_bytes(info.used),
+            "free": humanize_bytes(info.free),
+        }
     except TypeError:
-        return {"total": "N/A",
-                "used": "N/A",
-                "free": "N/A",
-                }
+        return {
+            "total": "N/A",
+            "used": "N/A",
+            "free": "N/A",
+        }
     except OSError as e:
         return {"ERROR": str(e)}
 
 
 def get_caches_info():
     ret = dict(settings.CACHES)
-    for k, v in ret.items():
+    keys = ret.keys()
+    for k in keys:
         backend = settings.CACHES[k]["BACKEND"]
         loc = settings.CACHES[k].get("LOCATION", None)
         if backend == "django.core.cache.backends.filebased.FileBasedCache":
@@ -193,13 +194,14 @@ def get_process(**kwargs):
         v = getattr(diff, e)
         if v > 0:
             if v == 1:
-                e = e[:-1]
-            diff_string += f"{v} {e} "
+                diff_string += f"{v} {e[:-1]} "
+            else:
+                diff_string += f"{v} {e} "
 
-    process['Name'] = p.name()
-    process['Command'] = p.cmdline()
-    process['Start Time'] = time.strftime("%d %b %Y %H:%M:%S", time.localtime(p.create_time()))
-    process['Uptime'] = diff_string
+    process["Name"] = p.name()
+    process["Command"] = p.cmdline()
+    process["Start Time"] = time.strftime("%d %b %Y %H:%M:%S", time.localtime(p.create_time()))
+    process["Uptime"] = diff_string
 
     return process
 
@@ -210,12 +212,14 @@ def get_project(**kwargs):
     project["tempdir"] = tempfile.gettempdir()
 
     if config.MEDIA_ROOT:
-        project["MEDIA_ROOT"] = OrderedDict([("path", settings.MEDIA_ROOT),
-                                             ("disk", get_device_info(settings.MEDIA_ROOT))])
+        project["MEDIA_ROOT"] = OrderedDict(
+            [("path", settings.MEDIA_ROOT), ("disk", get_device_info(settings.MEDIA_ROOT))]
+        )
 
     if config.STATIC_ROOT:
-        project["STATIC_ROOT"] = OrderedDict([("path", settings.STATIC_ROOT),
-                                              ("disk", get_device_info(settings.STATIC_ROOT))])
+        project["STATIC_ROOT"] = OrderedDict(
+            [("path", settings.STATIC_ROOT), ("disk", get_device_info(settings.STATIC_ROOT))]
+        )
 
     if config.DATABASES:
         project["DATABASES"] = get_databases()
@@ -232,15 +236,14 @@ def get_project(**kwargs):
 
 
 def get_os(**kwargs):
-    return {"uname": os.uname(),
-            "name": os.name}
+    return {"uname": os.uname(), "name": os.name}
 
 
-def run_check(id, request=None, fail_silently=True, fail_status=500):
+def run_check(object_id, request=None, fail_silently=True, fail_status=500):
     status = 200
     try:
-        v = config.checks[id]
-        if isinstance(v, six.string_types):
+        v = config.checks[object_id]
+        if isinstance(v, str):
             c = import_string(v)
             ret, status = c(request)
         elif callable(v):
@@ -262,7 +265,7 @@ def run_check(id, request=None, fail_silently=True, fail_status=500):
 def get_checks(request=None):
     checks = {}
     if config.checks:
-        for k, v in config.checks.items():
+        for k in config.checks:
             checks[k] = run_check(k)
 
     return checks
@@ -272,14 +275,14 @@ def get_extra(config, request=None):
     extras = {}
     for k, v in config.extra.items():
         try:
-            if isinstance(v, six.string_types):
+            if isinstance(v, str):
                 c = import_string(v)
                 extras[k] = c(request)
             elif callable(v):
                 extras[k] = v(request)
             else:
                 extras[k] = v
-        except Exception as e:
+        except Exception as e:  # noqa: PERF203
             logger.exception(e)
             if settings.DEBUG:
                 extras[k] = str(e)
@@ -308,15 +311,19 @@ def get_environment(config=None, request=None):
     return OrderedDict(sorted(ret.items()))
 
 
-handlers = OrderedDict([("host", get_host),
-                        ("os", get_os),
-                        ("environ", get_environment),
-                        ("python", get_python),
-                        ("modules", get_modules),
-                        ("process", get_process),
-                        ("project", get_project),
-                        ("extra", get_extra),
-                        ("checks", get_checks)])
+handlers = OrderedDict(
+    [
+        ("host", get_host),
+        ("os", get_os),
+        ("environ", get_environment),
+        ("python", get_python),
+        ("modules", get_modules),
+        ("process", get_process),
+        ("project", get_project),
+        ("extra", get_extra),
+        ("checks", get_checks),
+    ]
+)
 
 valid_sections = handlers.keys()
 

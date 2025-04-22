@@ -6,17 +6,14 @@ register = Library()
 @register.simple_tag(takes_context=True)
 def section(context, section_name):
     try:
-        data = context['infos'][section_name].items()
+        data = context["infos"][section_name].items()
     except KeyError as e:
-        accepted = ",".join(context['infos'].keys())
-        raise KeyError("Section `{0}` not found in ({1})".format(e, accepted))
+        accepted = ",".join(context["infos"].keys())
+        raise KeyError(f"Section `{e}` not found in ({accepted})") from None
     name = section_name.lower()
 
-    ctx = {
-        'name': name,
-        'section': data
-    }
+    ctx = {"name": name, "section": data}
 
-    filename = 'admin/sysinfo/%s_section.html' % name
+    filename = "admin/sysinfo/%s_section.html" % name
     t = context.template.engine.get_template(filename)
     return t.render(Context(ctx))

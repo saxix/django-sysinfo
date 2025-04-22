@@ -8,19 +8,7 @@ on:
     pull_request:
 
 jobs:
-    lint:
-        runs-on: ubuntu-latest
-        steps:
-            -   uses: actions/checkout@v2
-            -   uses: actions/setup-python@v2
 
-            -   name: Install dependencies
-                run: |
-                    python -m pip install --upgrade pip flake8 isort
-            -   name: Lint with flake8
-                run: |
-                    flake8 src
-                    isort -c src
     test:
         #        if: ${{github.event}} && ${{ !contains(github.event.head_commit.message, 'ci skip') }}
         runs-on: ubuntu-latest

@@ -1,3 +1,7 @@
+import codecs
+import logging
+from functools import wraps
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.cache import cache
@@ -6,10 +10,6 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.cache import patch_cache_control
 from django.views.decorators.cache import never_cache
-
-import codecs
-import logging
-from functools import wraps
 
 from django_sysinfo.conf import config
 
@@ -30,6 +30,7 @@ def http_basic_auth(func):
     @wraps(func)
     def _decorator(request, *args, **kwargs):
         from django.contrib.auth import authenticate, login
+
         if "HTTP_AUTHORIZATION" in request.META:
             authmeth, auth = request.META["HTTP_AUTHORIZATION"].split(" ", 1)
             if authmeth.lower() == "basic":
@@ -50,15 +51,15 @@ def http_basic_login(func):
 
 
 def sysinfo(request):
-    KEY = 'sysinfo/info'
+    key = "sysinfo/info"
     try:
-        content = cache.get(KEY)
+        content = cache.get(key)
 
         if not content:
             content = get_sysinfo(request)
 
         if config.ttl > 0:
-            cache.set(KEY, dict(content), config.ttl)
+            cache.set(key, dict(content), config.ttl)
 
         response = JsonResponse(content, safe=False)
         patch_cache_control(response, max_age=config.ttl, public=False)
@@ -84,9 +85,9 @@ def echo(request, value):
     return HttpResponse(value)
 
 
-def check(request, id):
+def check(request, object_id):
     try:
-        ret, status = run_check(id)
+        ret, status = run_check(object_id)
         return JsonResponse({"message": ret}, status=status)
     except Exception as e:  # pragma: no cover
         return JsonResponse({"error": str(e)}, status=500)
@@ -95,16 +96,17 @@ def check(request, id):
 @user_passes_test(is_authorized)
 def admin_sysinfo(request):
     infos = get_sysinfo(request)
-    infos.setdefault('extra', {})
-    infos.setdefault('checks', {})
+    infos.setdefault("extra", {})
+    infos.setdefault("checks", {})
     from django.contrib.admin import site
-    context = {'title': 'sysinfo',
-               'infos': infos,
-               'site_title': site.site_title,
-               'site_header': site.site_header,
-               'enable_switch': True,
-               'has_permission': True,
-               'user': request.user,
 
-               }
-    return render(request, 'admin/sysinfo/sysinfo.html', context)
+    context = {
+        "title": "sysinfo",
+        "infos": infos,
+        "site_title": site.site_title,
+        "site_header": site.site_header,
+        "enable_switch": True,
+        "has_permission": True,
+        "user": request.user,
+    }
+    return render(request, "admin/sysinfo/sysinfo.html", context)

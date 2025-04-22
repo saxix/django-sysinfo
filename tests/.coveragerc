@@ -25,6 +25,7 @@ exclude_lines =
     #if 0:
     if __name__ == .__main__.:
     if settings.DEBUG
+    if TYPE_CHECKING:
 
 ignore_errors = True
 
