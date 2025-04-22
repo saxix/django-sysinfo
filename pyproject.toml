@@ -55,6 +55,11 @@ dev = [
   "ruff>=0.11.6",
   "tox>=4.25",
 ]
+docs = [
+  "mkdocs>=1.6.1",
+  "mkdocs-material>=9.5.36",
+  "pymdown-extensions>=10.7.1",
+]
 dj5 = [
   "django==5.2.*",
 ]
